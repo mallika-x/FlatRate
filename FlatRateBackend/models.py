@@ -52,8 +52,8 @@ class Lease(models.Model):
     address = models.CharField(max_length = DB_MAXLEN)
 
 class Flatmates(models.Model):
-    lease   = models.ForeignKey(Lease, on_delete = models.CASCADE, related_name = "flatmates_lease")
-    user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "flatmates_user")
+    lease   = models.ForeignKey(Lease, on_delete = models.CASCADE,  related_name = "flatmates_lease")
+    user    = models.ForeignKey(User, on_delete = models.PROTECT,   related_name = "flatmates_user")
 
     class Meta:
         unique_together = ("lease", "user")
@@ -67,10 +67,16 @@ class ChoreTypes(models.Model):
         ]
 
 class Chores(models.Model):
-    choreType   = models.ForeignKey(ChoreTypes, on_delete = models.PROTECT, related_name = "chore_types_enumed")
+    choreType   = models.ForeignKey(ChoreTypes, on_delete = models.PROTECT,         related_name = "chore_types_enumed")
     weight      = models.IntegerField(choices = CHORE_PRIORITIES)
-    responsible = models.ForeignKey(User, null = True, on_delete = models.PROTECT, related_name = "chore_users_responsible")
+    responsible = models.ForeignKey(User, null = True, on_delete = models.PROTECT,  related_name = "chore_users_responsible")
 
 class ActiveChores(models.Model):
     chore   = models.ForeignKey(Chores, on_delete = models.CASCADE, related_name = "chores_active")
     expiry  = models.DateTimeField(null = True)
+
+class PastChores(models.Model):
+    chore       = models.ForeignKey(Chores, on_delete = models.CASCADE,             related_name = "chores_past")
+    responsible = models.ForeignKey(User, null = True, on_delete = models.PROTECT,  related_name = "chores_past_responsibility")
+    completer   = models.ForeignKey(User, on_delete = models.PROTECT,               related_name = "chores_past_completer")
+    doneDate    = models.DateField(auto_now_add = True)
