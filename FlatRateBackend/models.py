@@ -23,6 +23,14 @@ CHORE_PRIORITIES    = [(NO_PRIORITY,        "No Priority"),
                        (MEDIUM_PRIORITY,    "Medium Priority"),
                        (HIGH_PRIORITY,      "High Priority")]
 
+# Notification Constants
+UPCOMING_CHORE  = "You have an upcoming chore: "
+EXPIRED_CHORE   = "You have an overdue chore: "
+SHAME           = "Your social credit score is getting dangerously low."
+NOTIF_BODIES    = [(UPCOMING_CHORE, "Upcoming Chore"),
+                   (EXPIRED_CHORE,  "Expired Chore"),
+                   (SHAME,          "Shame")]
+
 class User(models.Model):
     """
     I like this better than the default.
@@ -39,13 +47,6 @@ class User(models.Model):
 class SocialCredits(models.Model):
     user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_social_credits")
     score   = models.IntegerField()
-
-# Should look into scrapping this and using actual notifs.
-# Does expo even allow this? TODO find out
-class Notifications(models.Model):
-    user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_notifications")
-    # Icon? Enumerated type? Consult with MM TODO
-    body    = models.CharField(max_length = DB_MAXLEN)
 
 class Lease(models.Model):
     leaseID = models.IntegerField(primary_key = True) # TODO format?
@@ -89,3 +90,11 @@ class Schedule(models.Model):
 class ScheduleSet(models.Model):
     schedule    = models.ForeignKey(Schedule, on_delete = models.CASCADE,   related_name = "schedule_to_scheduleset")
     chore       = models.ForeignKey(Chores, on_delete = models.CASCADE,     related_name = "chore_to_scheduleset")
+
+class NotifType(models.Model):
+    text    = models.CharField(max_length = DB_MAXLEN, choices = NOTIF_BODIES)
+
+class Notifications(models.Model):
+    user        = models.ForeignKey(User, on_delete = models.PROTECT,                   related_name = "user_notifications")
+    notifType   = models.ForeignKey(NotifType, on_delete = models.CASCADE,              related_name = "notification_type")
+    chore       = models.ForeignKey(Chores, null = True, on_delete = models.CASCADE,    related_name = "chore_notifications")
