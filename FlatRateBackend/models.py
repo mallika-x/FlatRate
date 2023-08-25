@@ -13,6 +13,16 @@ SNAMEMAXLEN     = 38
 # Social Credits Constants
 DEFAULT_SOCIAL_CREDITS = 200
 
+# Chore Constants
+NO_PRIORITY         = 0
+LOW_PRIORITY        = 5
+MEDIUM_PRIORITY     = 10
+HIGH_PRIORITY       = 20
+CHORE_PRIORITIES    = [(NO_PRIORITY,        "No Priority"),
+                       (LOW_PRIORITY,       "Low Priority"),
+                       (MEDIUM_PRIORITY,    "Medium Priority"),
+                       (HIGH_PRIORITY,      "High Priority")]
+
 class User(models.Model):
     """
     I like this better than the default.
@@ -55,3 +65,9 @@ class ChoreTypes(models.Model):
         constraints = [
             models.UniqueConstraint(fields = ["name"], name = "unique_chore_types")
         ]
+
+class Chores(models.Model):
+    choreType   = models.ForeignKey(ChoreTypes, on_delete = models.PROTECT, related_name = "chore_types_enumed")
+    weight      = models.IntegerField(choices = CHORE_PRIORITIES)
+    responsible = models.ForeignKey(User, null = True, on_delete = models.PROTECT, related_name = "chore_users_responsible")
+
