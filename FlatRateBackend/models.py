@@ -71,3 +71,6 @@ class Chores(models.Model):
     weight      = models.IntegerField(choices = CHORE_PRIORITIES)
     responsible = models.ForeignKey(User, null = True, on_delete = models.PROTECT, related_name = "chore_users_responsible")
 
+class ActiveChores(models.Model):
+    chore   = models.ForeignKey(Chores, on_delete = models.CASCADE, related_name = "chores_active")
+    expiry  = models.DateTimeField(null = True)
