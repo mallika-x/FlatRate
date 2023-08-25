@@ -80,3 +80,8 @@ class PastChores(models.Model):
     responsible = models.ForeignKey(User, null = True, on_delete = models.PROTECT,  related_name = "chores_past_responsibility")
     completer   = models.ForeignKey(User, on_delete = models.PROTECT,               related_name = "chores_past_completer")
     doneDate    = models.DateField(auto_now_add = True)
+
+class Schedule(models.Model):
+    flatmates   = models.ForeignKey(Flatmates, on_delete = models.CASCADE, related_name = "flatmats_schedule")
+    initDate    = models.DateField(auto_now_add = True)
+    duration    = models.IntegerField()
