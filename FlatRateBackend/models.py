@@ -47,3 +47,11 @@ class Flatmates(models.Model):
 
     class Meta:
         unique_together = ("lease", "user")
+
+class ChoreTypes(models.Model):
+    name    = models.CharField(max_length = DB_MAXLEN)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields = ["name"], name = "unique_chore_types")
+        ]
