@@ -1,1 +1,3 @@
 FlatRate/settings.py
+FlatRate/FlatRateBackend/migrations
+FlatRate/FlatRateBackend/migrations/*
