@@ -14,7 +14,12 @@ SNAMEMAXLEN     = 38
 DEFAULT_SOCIAL_CREDITS = 200
 
 class User(models.Model):
-    """I like this better than the default"""
+    """
+    I like this better than the default.
+    This is proof of concept so we don't need auth etc.
+    All foreign keys to this table should be PROTECT because once you're
+    in the social credits matrix you should never be able to escape.
+    """
     email   = models.EmailField(max_length = EMAILMAXLEN, primary_key = True)
     fnames  = models.CharField(max_length = FNAMESMAXLEN)
     snames  = models.CharField(max_length = SNAMEMAXLEN)
@@ -28,6 +33,17 @@ class SocialCredits(models.Model):
 # Should look into scrapping this and using actual notifs.
 # Does expo even allow this? TODO find out
 class Notifications(models.Model):
-    user    = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "user_notifications")
+    user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_notifications")
     # Icon? Enumerated type? Consult with MM TODO
     body    = models.CharField(max_length = DB_MAXLEN)
+
+class Lease(models.Model):
+    leaseID = models.IntegerField(primary_key = True) # TODO format?
+    address = models.CharField(max_length = DB_MAXLEN)
+
+class Flatmates(models.Model):
+    lease   = models.ForeignKey(Lease, on_delete = models.CASCADE, related_name = "flatmates_lease")
+    user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "flatmates_user")
+
+    class Meta:
+        unique_together = ("lease", "user")
