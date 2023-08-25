@@ -85,3 +85,7 @@ class Schedule(models.Model):
     flatmates   = models.ForeignKey(Flatmates, on_delete = models.CASCADE, related_name = "flatmats_schedule")
     initDate    = models.DateField(auto_now_add = True)
     duration    = models.IntegerField()
+
+class ScheduleSet(models.Model):
+    schedule    = models.ForeignKey(Schedule, on_delete = models.CASCADE,   related_name = "schedule_to_scheduleset")
+    chore       = models.ForeignKey(Chores, on_delete = models.CASCADE,     related_name = "chore_to_scheduleset")
