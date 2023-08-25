@@ -1,3 +1,4 @@
 FlatRate/settings.py
-FlatRate/FlatRateBackend/migrations
-FlatRate/FlatRateBackend/migrations/*
+FlatRateBackend/migrations/
+FlatRate/__pycache__/
+FlatRateBackend/__pycache__/
