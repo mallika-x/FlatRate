@@ -1,9 +1,10 @@
-from django.shortcuts import render
-from rest_framework.parsers import JSONParser
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.shortcuts           import render
+from rest_framework.parsers     import JSONParser
+from rest_framework.views       import APIView
+from rest_framework.response    import Response
 
 from FlatRateBackend.models import *
+from .constants             import *
 
 # Errors
 BAD_FIELDS_POST = Response({"error": "bad_post_request_fields"})
@@ -55,13 +56,29 @@ class APIPostNewUser(APIView):
         except:
             return SAVE_ERROR
 
+        creds = SocialCredits(user = add, score = DEFAULT_SOCIAL_CREDITS)
+        try:
+            creds.save()
+        except:
+            add.delete()
+            return SAVE_ERROR
+
         return GOOD
 
 # NEVER TOUCH THIS
 class APIBurnEverything(APIView):
     def post(self, request):
         tables = [
-                User
+                User,
+                SocialCredits,
+                #Lease,
+                #Flatmates,
+                #Chores,
+                #AciveChores,
+                #PastChores,
+                #Schedule,
+                #ScheduleSet,
+                #Notifications
         ]
         for t in tables:
             for r in t.objects.all():
