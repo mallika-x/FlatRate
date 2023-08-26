@@ -5,16 +5,17 @@ from sys        import argv
 base = "http://10.89.211.86:8000/flatrate/api-"
 
 endpoints = [
-    ("post-new-user",   post),
-    ("post-new-user",   post),
-    ("post-new-user",   post),
-    ("resolve-address", post),
-    ("resolve-address", post),
-    ("try-login",       get),
-    ("create-chore",    post),
-    ("create-chore",    post),
-    ("create-chore",    post),
-    ("get-user-chores", get),
+    ("post-new-user",       post),
+    ("post-new-user",       post),
+    ("post-new-user",       post),
+    ("resolve-address",     post),
+    ("try-login",           get),
+    ("create-chore",        post),
+    ("create-chore",        post),
+    ("create-chore",        post),
+    ("create-chore",        post),
+    ("get-user-chores",     get),
+    ("get-others-chores",   get)
     ]
 
 paramses = [
@@ -22,22 +23,19 @@ paramses = [
         "fnames":   "Jane Mary",
         "sname":    "Doe",
         "email":    "jmdoe@gmail.com",
-        "leaseid":  0
+        "leaseid":  222
     }, {
         "fnames":   "John",
         "sname":    "Smith",
         "email":    "jsmith@outlook.com",
-        "leaseid":  0
+        "leaseid":  222
     }, {
         "fnames":   "Homeowner",
         "sname":    "Person",
         "email":    "a@gmail.com",
-        "leaseid":  222
+        "leaseid":  0
     }, {
-        "uname":    "jmdoe@gmail.com",
-        "address":  "123 Cringe Street, Inala"
-    }, {
-        "uname":    "jsmith@outlook.com",
+        "uname":    "a@gmail.com",
         "address":  "123 Cringe Street, Inala"
     }, {
         "username": "jmdoe@gmail.com"
@@ -57,7 +55,15 @@ paramses = [
         "owner":    "jsmith@outlook.com",
         "expiry":   "18:30:00 2/11/2023"
     }, {
+        "type":     17,
+        "weight":   10,
+        "owner":    "a@gmail.com",
+        "expiry":   "18:30:00 2/11/2023"
+    }, {
         "uname":    "jmdoe@gmail.com"
+    }, {
+        "leaseid":  222,
+        "exclude":  "jsmith@outlook.com"
     }
 ]
 

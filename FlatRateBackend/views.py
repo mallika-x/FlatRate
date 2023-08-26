@@ -9,6 +9,8 @@ from .constants             import *
 from random     import randint
 from datetime   import datetime
 
+flatten = lambda ll: [] if len(ll) == 0 else ll[0] + flatten(ll[1:])
+
 # Errors
 NEXIST_FLD  = Response({"error": "field doesn't exist"})
 BAD_FIELDS  = Response({"error": "bad_request_fields"})
@@ -20,10 +22,10 @@ class APIBurnEverything(APIView):
     def post(self, request):
         tables = [
                 SocialCredits,
-                Lease,
                 #Flatmates,
                 Chores,
                 ActiveChores,
+                Lease,
                 #PastChores,
                 #Schedule,
                 #ScheduleSet,
@@ -33,7 +35,11 @@ class APIBurnEverything(APIView):
         for t in tables:
             for r in t.objects.all():
                 if t != Lease or "Bracken Ridge" not in r.address:
-                    r.delete()
+                    # This is abyssmal
+                    try:
+                        r.delete()
+                    except:
+                        pass
 
         return Response({"Killed everything"})
 
@@ -189,4 +195,23 @@ class APIGetUserChores(APIView):
         chores = Chores.objects.filter(responsible = user)
         return Response([c.id for c in chores])
 
-#class APIGetOthersChores(APIView):
+class APIGetOthersChores(APIView):
+    """
+    leaseid - lease ID corresponding to the flatmates group
+    exclude - email of the person not to include
+    """
+    def get(self, request):
+        try:
+            leaseID = int(request.GET.get("leaseid"))
+            uname   = request.GET.get("exclude")
+            lease   = Lease.objects.filter(leaseID = leaseID)[0]
+            exclude = User.objects.filter(email = uname)[0]
+        except:
+            return BAD_FIELDS
+
+        mates       = Flatmates.objects.filter(lease = lease)
+        others      = [m.user for m in mates if m.user != exclude]
+        totChores   = [list(Chores.objects.filter(responsible = m)) for m in others]
+        flat        = flatten(totChores)
+
+        return Response([f.id for f in flat])
