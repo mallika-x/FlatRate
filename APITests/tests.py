@@ -5,8 +5,9 @@ base = "http://10.89.211.86:8000/flatrate/api-"
 
 endpoints = [
     ("post-new-user",   post),
+    ("resolve-address", post),
     ("try-login",       get),
-    #("create-chore",    post),
+    ("create-chore",    post),
     ]
 
 paramses = [
@@ -16,12 +17,14 @@ paramses = [
         "email":    "jmdoe@gmail.com",
         "leaseid":  222
     }, {
+        "uname":    "jmdoe@gmail.com",
+        "address":  "123 Cringe Street, Inala"
+    }, {
         "username": "jmdoe@gmail.com"
-    #}, {
-    #    "type":     1,
-    #    "weight":   15,
-    #    "owner":    "jmdoe@gmail.com"
-    #}
+    }, {
+        "type":     1,
+        "weight":   15,
+        "owner":    "jmdoe@gmail.com"
     }
 ]
 
@@ -49,8 +52,8 @@ def main():
             f.write(res.text)
             f.close
 
-    #print(post(f"{base}burn-everything/").text[2:-2])
-    #system("rm /home/bingers/MICASA/FlatRate/media/* 2>  /dev/null")
+    print(post(f"{base}burn-everything/").text[2:-2])
+    system("rm /home/bingers/MICASA/FlatRate/media/* 2>  /dev/null")
 
 if __name__ == "__main__":
     main()

@@ -31,3 +31,6 @@ NOTIF_BODIES    = [(UPCOMING_CHORE, "Upcoming Chore"),
 
 # Date time Constants
 DATETIME_FMT = "%H:%m:%S %d/%m/%Y"
+
+# Randomness COnstants
+LARGE_ENOUGH = 1000000

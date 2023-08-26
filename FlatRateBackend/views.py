@@ -7,7 +7,6 @@ from FlatRateBackend.models import *
 from .constants             import *
 
 from random     import randint
-from sys        import maxsize
 from datetime   import datetime
 
 # Errors
@@ -20,9 +19,8 @@ GOOD        = Response(["good"])
 class APIBurnEverything(APIView):
     def post(self, request):
         tables = [
-                User,
                 SocialCredits,
-                #Lease,
+                Lease,
                 #Flatmates,
                 #Chores,
                 #AciveChores,
@@ -30,6 +28,7 @@ class APIBurnEverything(APIView):
                 #Schedule,
                 #ScheduleSet,
                 #Notifications
+                User
         ]
         for t in tables:
             for r in t.objects.all():
@@ -115,18 +114,18 @@ class APIResolveAddress(APIView):
 
     def post(self, request):
         try:
-            uname   = request.GET.get("uname")
-            addr    = request.GET.get("address").lower().replace("  ", " ")
+            uname   = request.POST.get("uname")
+            addr    = request.POST.get("address").lower().replace("  ", " ")
             user    = User.objects.filter(email = uname).all()[0]
         except:
             return BAD_FIELDS
 
-        lease = Lease.objects.filter(address = address)
+        lease = Lease.objects.filter(address = addr)
         if (lease.exists()):
             new_mate = Flatmates(user = user, lease = lease.all()[0])
         else:
-            new_lease_id = -1 * randint(maxsize)
-            new_lease = Lease(address = address, leaseID = new_lease_id)
+            new_lease_id = -1 * randint(1, LARGE_ENOUGH)
+            new_lease = Lease(address = addr, leaseID = new_lease_id)
             new_lease.save() # just pray for no collisions
             new_mates = Flatmates(lease = new_lease, user = user)
             new_mates.save()
