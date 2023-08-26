@@ -1,8 +1,10 @@
 //import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './screens/home';
-import DetailsScreen from './screens/details';
+import LoginScreen from './screens/login';
+import Details from './screens/details';
+import CreateAccount from './screens/createAccount';
+import Home from './screens/home';
 import { useFonts } from 'expo-font'
 import { Prompt_400Regular } from '@expo-google-fonts/prompt'
 import { Text } from 'react-native';
@@ -23,8 +25,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="DetailsScreen" component={Details} />
+        <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
+        <Stack.Screen name="HomeScreen" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );

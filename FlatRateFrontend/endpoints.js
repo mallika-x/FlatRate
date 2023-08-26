@@ -1,11 +1,11 @@
 // this is where we define
 // our urls to communicate with the backend
 
-const BASE = "http://10.89.211.86:8000"
+const BASE = "http://10.89.211.86:8000/flatrate"
 
 export default {
-    //registerPoint:      BASE + "/account/api-create-account/",
-    loginPoint:         BASE + "/auth/token-request/",
+    registerPoint:      BASE + "/api-post-new-user/",
+    loginPoint:         BASE + "/api-try-login/",
     //lastCheckin:        BASE + "/fetch/api-fetch-last-checkin",
     //addCheckin:         BASE + "/push/api-push-new-checkin/",
     //getInterests:       BASE + "/fetch/api-fetch-interests",

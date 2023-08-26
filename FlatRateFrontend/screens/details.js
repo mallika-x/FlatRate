@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
-const DetailsScreen = () => {
+export default () => {
         return (
           <View style={styles.container}>
-            <Text>Hello, World!</Text>
+            <Text>Page for backend not being on</Text>
           </View>
     );
 };
@@ -16,5 +16,3 @@ const styles = StyleSheet.create({
           alignItems: 'center',
     },
 });
-
-export default DetailsScreen;
