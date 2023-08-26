@@ -11,6 +11,8 @@ endpoints = [
     ("resolve-address", post),
     ("try-login",       get),
     ("create-chore",    post),
+    ("create-chore",    post),
+    ("create-chore",    post),
     ("get-user-chores", get),
     ]
 
@@ -37,6 +39,16 @@ paramses = [
         "type":     1,
         "weight":   15,
         "owner":    "jmdoe@gmail.com",
+        "expiry":   "18:30:00 2/11/2023"
+    }, {
+        "type":     4,
+        "weight":   15,
+        "owner":    "jmdoe@gmail.com",
+        "expiry":   "18:30:00 2/11/2023"
+    }, {
+        "type":     7,
+        "weight":   5,
+        "owner":    "jsmith@outlook.com",
         "expiry":   "18:30:00 2/11/2023"
     }, {
         "uname":    "jmdoe@gmail.com"
