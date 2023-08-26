@@ -265,6 +265,19 @@ class APICompleteChore(APIView):
 
         return GOOD
 
+class APIGetChoreDetails(APIView):
+    """
+    choreid - ID for the chore to get details of
+    """
+    def get(self, request):
+        try:
+            choreid = int(request.GET.get("choreid"))
+            chore   = Chores.objects.filter(id = choreid)[0]
+        except:
+            return BAD_FIELDS
+
+        return Response({"id": choreid, "type": chore.choreType.id, "weight": chore.weight, "responsible": chore.responsible.email})
+
 class APIGetTallies(APIView):
     """
     leaseid - lease ID for flatmates to get the tallies for
