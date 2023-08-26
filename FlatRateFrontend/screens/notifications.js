@@ -4,7 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 export default () => {
         return (
           <View style={styles.container}>
-            <Text>Notifications here</Text>
+            <Text>Notifications screen</Text>
           </View>
     );
 };

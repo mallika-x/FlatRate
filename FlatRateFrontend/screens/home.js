@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { SafeAreaView, iew, Text, TextInput, Button, StyleSheet } from 'react-native';
+import styles from "../styles"
+import Header from '../components/Header'
 
-export default () => {
+export default ({navigation}) => {
         return (
-          <View style={styles.container}>
-            <Text>This is the home screen! Login success</Text>
-          </View>
-    );
+            <SafeAreaView style={[styles.engageBgContainer, {justifyContent:"flex-start"}]}>
+                <Header text="Welcome" navigation={navigation} />
+            </SafeAreaView>
+        );
 };
-
-const styles = StyleSheet.create({
-    container: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-    },
-});
