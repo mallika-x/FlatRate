@@ -1,5 +1,5 @@
 from django.shortcuts           import render
-from rest_framework.parsers     import JSONParser
+from rest_framework.parsers     import JSONParser, MultiPartParser, FormParser
 from rest_framework.views       import APIView
 from rest_framework.response    import Response
 
@@ -11,6 +11,7 @@ from sys        import maxsize
 from datetime   import datetime
 
 # Errors
+NEXIST_FLD  = Response({"error": "field doesn't exist"})
 BAD_FIELDS  = Response({"error": "bad_request_fields"})
 SAVE_ERROR  = Response({"error": "could not save"})
 GOOD        = Response(["good"])
@@ -59,27 +60,24 @@ class APIPostNewUser(APIView):
     """
     fnames  - new user's given name(s) as a single string
     sname   - new user's surname
-    pii     - new user's personal documents as b64
+    leaseid - lease ID from RTA or 0 if n/a
     email   - new user's email
-    photo   - new user's photo as b64
-    leaseid - lease ID from RTA or "0" if n/a
     """
     def post(self, request):
         try:
             c       = request.POST
             fnames  = c.get("fnames")
-            snames  = c.get("sname")
+            sname   = c.get("sname")
             email   = c.get("email")
             leaseid = int(c.get("leaseid"))
-            pii     = request.FILES.get("pii")
-            photo   = request.FILES.get("photo")
         except:
-            return BAD_FIELDS
+            return NEXIST_FLD
 
-        add = User(fnames = fnames, snames = snames, email = email, pii = pii, photo = photo)
+        add = User(fnames = fnames, sname = sname, email = email)
         try:
             add.save()
         except:
+            print("no")
             return SAVE_ERROR
 
         creds = SocialCredits(user = add, score = DEFAULT_SOCIAL_CREDITS)
@@ -100,8 +98,8 @@ class APIPostNewUser(APIView):
                     add.delete()
                     return SAVE_ERROR
             else:
-                creds.delete()
-                add.delete()
+                #creds.delete()
+                #add.delete()
                 return Response({"accepted": "needs-address"})
         else:
             return Response({"accepted": "needs-address"})

@@ -11,9 +11,10 @@ class User(models.Model):
     """
     email   = models.EmailField(max_length = EMAILMAXLEN, primary_key = True)
     fnames  = models.CharField(max_length = FNAMESMAXLEN)
-    snames  = models.CharField(max_length = SNAMEMAXLEN)
-    pii     = models.FileField() # see if this works without upload_to param
-    photo   = models.ImageField()   # this too
+    sname   = models.CharField(max_length = SNAMEMAXLEN)
+    # WORK FFS
+    #pii     = models.FileField() # see if this works without upload_to param
+    #photo   = models.ImageField()   # this too
 
 class SocialCredits(models.Model):
     user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_social_credits")
@@ -59,9 +60,9 @@ class PastChores(models.Model):
     doneDate    = models.DateField(auto_now_add = True)
 
 class ChoreTallies(models.Model):
-    user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_tallies")
-    done    = models.IntegerField()
-    skipped = models.IntegerField()
+    user        = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_tallies")
+    completed   = models.IntegerField()
+    skipped     = models.IntegerField()
 
 class Schedule(models.Model):
     flatmates   = models.ForeignKey(Flatmates, on_delete = models.CASCADE, related_name = "flatmates_schedule")
@@ -73,6 +74,7 @@ class ScheduleSet(models.Model):
     chore       = models.ForeignKey(Chores, on_delete = models.CASCADE,     related_name = "chore_to_scheduleset")
 
 class NotifType(models.Model):
+    key     = models.AutoField(primary_key = True)
     text    = models.CharField(max_length = DB_MAXLEN, choices = NOTIF_BODIES)
 
 class Notifications(models.Model):
