@@ -73,7 +73,7 @@ class APIPostNewUser(APIView):
     sname   - new user's surname
     leaseid - lease ID from RTA or 0 if n/a
     email   - new user's email
-    address - new user's address'\
+    address - new user's address
     """
     def post(self, request):
         try:
