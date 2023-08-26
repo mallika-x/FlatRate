@@ -31,6 +31,11 @@ NOTIF_BODIES    = [(UPCOMING_CHORE, "Upcoming Chore"),
 
 # Date time Constants
 DATETIME_FMT = "%H:%M:%S %d/%m/%Y"
+DATE_FMT = "%d/%m/%Y"
 
 # Randomness COnstants
 LARGE_ENOUGH = 1000000
+
+# History
+HISTORY_PATH = "media/history.csv"
+HISTORY_HEADER = ["completionDate", "assignedTo", "completedBy", "choreName", "weight"]

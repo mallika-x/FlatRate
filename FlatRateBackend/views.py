@@ -3,11 +3,15 @@ from rest_framework.parsers     import JSONParser, MultiPartParser, FormParser
 from rest_framework.views       import APIView
 from rest_framework.response    import Response
 
+from django.http import FileResponse
+
 from FlatRateBackend.models import *
 from .constants             import *
 
 from random     import randint
 from datetime   import datetime
+from csv        import reader, writer
+from os         import path
 
 flatten = lambda ll: [] if len(ll) == 0 else ll[0] + flatten(ll[1:])
 
@@ -23,7 +27,7 @@ class APIBurnEverything(APIView):
         tables = [
                 #SocialCredits,
                 #Flatmates,
-                ChoreTallies,
+                #ChoreTallies,
                 PastChores,
                 ActiveChores,
                 Chores,
@@ -87,10 +91,13 @@ class APIPostNewUser(APIView):
             print("no")
             return SAVE_ERROR
 
-        creds = SocialCredits(user = add, score = DEFAULT_SOCIAL_CREDITS)
-        tally = ChoreTallies(user = add, completed = 0, skipped = 0)
-        creds.save()
-        tally.save()
+        if not SocialCredits.objects.filter(user = add).exists():
+            creds = SocialCredits(user = add, score = DEFAULT_SOCIAL_CREDITS)
+            creds.save()
+
+        if not ChoreTallies.objects.filter(user = add).exists():
+            tally = ChoreTallies(user = add, completed = 0, skipped = 0)
+            tally.save()
 
         if (leaseid):
             search = Lease.objects.filter(leaseID = leaseid)
@@ -277,6 +284,45 @@ class APIGetChoreDetails(APIView):
             return BAD_FIELDS
 
         return Response({"id": choreid, "type": chore.choreType.id, "weight": chore.weight, "responsible": chore.responsible.email})
+
+class APIGetChoreHistory(APIView):
+    """
+    No params, just returns a csv file. Might get a bit huge.
+    completion  assignee    completer   name    weight
+    """
+
+    def get(self, request):
+        ct2n = lambda i: ChoreTypes.objects.filter(id = i)[0].name
+        d2s = lambda d: d.strftime(DATE_FMT)
+        u2n = lambda u: u.fnames.split()[0] + " " + u.sname
+
+        existing = []
+        if path.exists(HISTORY_PATH):
+            f = open(HISTORY_PATH, "r")
+            existing = list(reader(f))[1:]
+            f.close()
+        past = PastChores.objects.all()
+        agg = [(t, t.chore) for t in past]
+        fmted = [[d2s(p.doneDate), u2n(p.responsible), u2n(p.completer),  ct2n(c.choreType.id), c.weight] for p, c in agg]
+        tot = existing + fmted
+        tot.sort(key = lambda r: r[0])
+
+        f = open(HISTORY_PATH, "w")
+        w = writer(f)
+        w.writerow(HISTORY_HEADER)
+        for r in tot:
+            w.writerow(r)
+        f.close()
+
+        for p in PastChores.objects.all():
+            c = p.chore
+            c.delete()
+            p.delete()
+
+        f = open(HISTORY_PATH, "rb")
+        return FileResponse(f, filename = "history.csv", as_attachment = True)
+
+
 
 class APIGetTallies(APIView):
     """

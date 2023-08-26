@@ -12,6 +12,7 @@ urlpatterns = [
         path("api-get-others-chores/",  views.APIGetOthersChores.as_view(), name = "get-others-chores"),
         path("api-complete-chore/",     views.APICompleteChore.as_view(),   name = "complete-chore"),
         path("api-get-chore-details/",  views.APIGetChoreDetails.as_view(), name = "chore-details"),
+        path("api-get-chore-history/",  views.APIGetChoreHistory.as_view(), name = "chore-history"),
 
         path("api-get-flatmates/",      views.APIGetFlatmates.as_view(),    name = "get-flatmates"),
 
