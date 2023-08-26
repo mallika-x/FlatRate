@@ -1,10 +1,11 @@
 from requests   import get, post
-from os         import remove
+from os         import system, remove
 
 base = "http://10.89.211.86:8000/flatrate/api-"
 
 endpoints = [
-    ("post-new-user/", post)
+    ("post-new-user",   post),
+    ("try-login",       get)
     ]
 
 paramses = [
@@ -12,6 +13,8 @@ paramses = [
         "fname":    "Jane Mary",
         "sname":    "Doe",
         "email":    "jmdoe@gmail.com"
+    }, {
+        "username": "jmdoe@gmail.com"
     }
 ]
 
@@ -19,23 +22,34 @@ fileses = [
     {
         "pii":      open("/home/bingers/Desktop/fakepassport.png",    "rb"),
         "photo":    open("/home/bingers/Desktop/fakephoto.jpg",       "rb")
-    }
+    }, {None: None}
 ]
 
 def main():
+    system("clear")
     combined = list(zip(endpoints, paramses, fileses))
     for i in combined:
         end, params, files = i
         url, method = end
-        res = method(base + url, params = params, files = files)
-        if (res.status_code == 200):
-            print(url + " passed")
-            remove(f"{url[:-1]}.html")
+        res = None
+        if files is not None:
+            res = method(f"{base}{url}/", params = params, files = files)
         else:
-            print(url + " failed")
-            f = open(f"{url[:-1]}.html", "w")
+            res = method(f"{base}{url}/", params = params)
+        if (res.status_code == 200):
+            print(url + "\tpassed")
+            try:
+                remove(f"{url}.html")
+            except:
+                # idc
+                pass
+        else:
+            print(url + "\tfailed")
+            f = open(f"{url}.html", "w")
             f.write(res.text)
             f.close
+
+    print(post(f"{base}burn-everything/").text[2:-2])
 
 
 if __name__ == "__main__":

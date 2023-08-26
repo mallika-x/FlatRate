@@ -11,6 +11,23 @@ SAVE_ERROR      = Response({"error": "could not save"})
 GOOD            = Response(["good"])
 
 # GET REQUESTS
+class APITryLogin(APIView):
+    """
+    username - email of user attempting to log in
+    """
+    def get(self, request):
+        try:
+            uname = request.GET.get("username")
+        except:
+            return BAD_FIELDS
+
+        resp = None
+        if User.objects.filter(email = uname).exists():
+            resp = Response({"access": "approved"})
+        else:
+            resp = Response({"access": "denied"})
+
+        return resp
 
 # POST REQUESTS
 class APIPostNewUser(APIView):
@@ -39,3 +56,15 @@ class APIPostNewUser(APIView):
             return SAVE_ERROR
 
         return GOOD
+
+# NEVER TOUCH THIS
+class APIBurnEverything(APIView):
+    def post(self, request):
+        tables = [
+                User
+        ]
+        for t in tables:
+            for r in t.objects.all():
+                r.delete()
+
+        return Response({"Killed everything"})
