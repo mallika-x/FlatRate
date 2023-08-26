@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import globals from '../globals'
+import endpoints from '../endpoints';
 
-const HomeScreen = () => {
+
+export default ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
@@ -10,14 +13,18 @@ const HomeScreen = () => {
     // For simplicity, just check if the username and password are both "admin"
     if (username === 'admin' && password === 'admin') {
       setLoggedIn(true);
-    }
-  };
+     }
+   };
 
   const handleLogout = () => {
     setLoggedIn(false);
     setUsername('');
     setPassword('');
   };
+
+  if (globals.backendOn) {
+  navigation.navigate('Details');
+  }
 
   return (
     <View style={styles.container}>
@@ -82,5 +89,3 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-
-export default HomeScreen;
