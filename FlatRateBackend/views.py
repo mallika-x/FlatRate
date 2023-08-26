@@ -73,6 +73,7 @@ class APIPostNewUser(APIView):
     sname   - new user's surname
     leaseid - lease ID from RTA or 0 if n/a
     email   - new user's email
+    address - new user's address'\
     """
     def post(self, request):
         try:
@@ -81,6 +82,7 @@ class APIPostNewUser(APIView):
             sname   = c.get("sname")
             email   = c.get("email")
             leaseid = int(c.get("leaseid"))
+            address = c.get("address").replace("  ", "")
         except:
             return NEXIST_FLD
 
@@ -103,48 +105,58 @@ class APIPostNewUser(APIView):
             search = Lease.objects.filter(leaseID = leaseid)
             if search.exists():
                 new_mate = Flatmates(lease = search[0], user = add)
-                try:
-                    new_mate.save()
-                except:
-                    creds.delete()
-                    add.delete()
-                    return SAVE_ERROR
+                new_mate.save()
             else:
-                #creds.delete()
-                #add.delete()
-                return Response({"accepted": "needs-address"})
+                addrSearch = Lease.objects.filter(address = address)
+                if addrSearch.exists():
+                    newMate = Flatmates(lease = addrSearch[0], user = add)
+                    newMate.save()
+                else:
+                    newLease = Lease(leaseID = leaseid, address = address)
+                    newLease.save()
+                    newMates = Flatmates(lease = newLease, user = add)
+                    newMates.save()
         else:
-            return Response({"accepted": "needs-address"})
-
+            addrSearch = Lease.objects.filter(address = address)
+            if addrSearch.exists():
+                newMate = Flatmates(lease = addrSearch[0], user = add)
+                newMate.save()
+            else:
+                leaseid = -1 * randint(1, BIG_ENOUGH)
+                newLease = Lease(leaseID = leaseid, address = address)
+                newLease.save()
+                newMates = Flatmates(lease = newLease, user = add)
+                newMates.save()
 
         return GOOD
 
-class APIResolveAddress(APIView):
-    """
-    uname   - email of user
-    address - address of their house/flat
-    """
 
-    def post(self, request):
-        try:
-            uname   = request.POST.get("uname")
-            addr    = request.POST.get("address").lower().replace("  ", " ")
-            user    = User.objects.filter(email = uname).all()[0]
-        except:
-            return BAD_FIELDS
+#class APIResolveAddress(APIView):
+#    """
+#    uname   - email of user
+#    address - address of their house/flat
+#    """
 
-        lease = Lease.objects.filter(address = addr)
-        if (lease.exists()):
-            new_mate = Flatmates(user = user, lease = lease.all()[0])
-            new_lease_id = new_mate.lease.leaseID
-        else:
-            new_lease_id = -1 * randint(1, LARGE_ENOUGH)
-            new_lease = Lease(address = addr, leaseID = new_lease_id)
-            new_lease.save() # just pray for no collisions
-            new_mates = Flatmates(lease = new_lease, user = user)
-            new_mates.save()
+#    def post(self, request):
+#        try:
+#            uname   = request.POST.get("uname")
+#            addr    = request.POST.get("address").lower().replace("  ", " ")
+#            user    = User.objects.filter(email = uname).all()[0]
+#        except:
+#            return BAD_FIELDS
 
-        return Response({"good": new_lease_id})
+#        lease = Lease.objects.filter(address = addr)
+#        if (lease.exists()):
+#            new_mate = Flatmates(user = user, lease = lease.all()[0])
+#            new_lease_id = new_mate.lease.leaseID
+#        else:
+#            new_lease_id = -1 * randint(1, LARGE_ENOUGH)
+#            new_lease = Lease(address = addr, leaseID = new_lease_id)
+#            new_lease.save() # just pray for no collisions
+#            new_mates = Flatmates(lease = new_lease, user = user)
+#            new_mates.save()
+
+#        return Response({"good": new_lease_id})
 
 # Chore things
 class APIGetChoreTypes(APIView):
