@@ -6,8 +6,9 @@ from rest_framework.response    import Response
 from FlatRateBackend.models import *
 from .constants             import *
 
-from random import randint
-from sys    import maxsize
+from random     import randint
+from sys        import maxsize
+from datetime   import datetime
 
 # Errors
 BAD_FIELDS  = Response({"error": "bad_post_request_fields"})
@@ -145,6 +146,7 @@ class APICreateChore(APIView):
     type    - ID of chore type, see api-get-chore-types
     weight  - 0/5/10/20
     owner   - user responsible or "" for none responsible
+    expiry  - date & time chore is due
     """
     def post(self, request):
         try:
@@ -152,6 +154,7 @@ class APICreateChore(APIView):
             ctype   = int(c.get("type"))
             weight  = int(c.get("weight"))
             owner   = c.get("owner")
+            expiry  = datetime.strptime(c.get("expiry", DATETIME_FMT))
             rtype   = ChoreTypes.objects.filter(id = ctype)[0]
             userrsp = User.objects.filter(email = owner)[0]
         except:
@@ -163,4 +166,16 @@ class APICreateChore(APIView):
         except:
             return SAVE_ERROR
 
+        active = ActiveChore(chore = add, expiry = expiry)
+        try:
+            active.save()
+        except:
+            add.delete()
+            return SAVE_ERROR
+
         return GOOD
+
+#class APIGetUserChores(APIView):
+#    """
+
+#    """

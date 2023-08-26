@@ -8,6 +8,7 @@ urlpatterns = [
 
         path("api-get-chore-types/",    views.APIGetChoreTypes.as_view(),   name = "chore-types"),
         path("api-create-chore/",       views.APICreateChore.as_view(),     name = "create-chores"),
+        #path("api-get-user-chores/",    )
 
         path("api-burn-everything/",    views.APIBurnEverything.as_view(),  name = "burn-everything")
 ]

@@ -28,3 +28,6 @@ SHAME           = "Your social credit score is getting dangerously low."
 NOTIF_BODIES    = [(UPCOMING_CHORE, "Upcoming Chore"),
                    (EXPIRED_CHORE,  "Expired Chore"),
                    (SHAME,          "Shame")]
+
+# Date time Constants
+DATETIME_FMT = "%H:%m:%S %d/%m/%Y"
