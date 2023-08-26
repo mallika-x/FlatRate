@@ -42,22 +42,22 @@ paramses = [
         "username": "jmdoe@gmail.com"
     }, {
         "type":     1,
-        "weight":   15,
+        "weight":   20,
         "owner":    "jmdoe@gmail.com",
         "expiry":   "18:30:00 2/11/2023"
     }, {
         "type":     4,
-        "weight":   15,
+        "weight":   20,
         "owner":    "jmdoe@gmail.com",
         "expiry":   "18:30:00 2/11/2023"
     }, {
         "type":     7,
-        "weight":   5,
+        "weight":   10,
         "owner":    "jsmith@outlook.com",
         "expiry":   "18:30:00 2/11/2023"
     }, {
         "type":     17,
-        "weight":   10,
+        "weight":   30,
         "owner":    "a@gmail.com",
         "expiry":   "18:30:00 2/11/2023"
     }, {

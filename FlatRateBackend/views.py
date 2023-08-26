@@ -21,10 +21,11 @@ GOOD        = Response(["good"])
 class APIBurnEverything(APIView):
     def post(self, request):
         tables = [
-                SocialCredits,
+                #SocialCredits,
                 #Flatmates,
-                Chores,
+                PastChores,
                 ActiveChores,
+                Chores,
                 Lease,
                 #PastChores,
                 #Schedule,
@@ -87,11 +88,9 @@ class APIPostNewUser(APIView):
             return SAVE_ERROR
 
         creds = SocialCredits(user = add, score = DEFAULT_SOCIAL_CREDITS)
-        try:
-            creds.save()
-        except:
-            add.delete()
-            return SAVE_ERROR
+        tally = ChoreTallies(user = add, completed = 0, skipped = 0)
+        creds.save()
+        tally.save()
 
         if (leaseid):
             search = Lease.objects.filter(leaseID = leaseid)
@@ -216,6 +215,66 @@ class APIGetOthersChores(APIView):
 
         return Response([f.id for f in flat])
 
+class APICompleteChore(APIView):
+    """
+    chore       - id of chore to complete
+    completer   - email of user who completed it
+    """
+    def post(self, request):
+        try:
+            choreid = int(request.GET.get("chore"))
+            uname   = request.GET.get("completer")
+            chore   = Chores.objects.filter(id = choreid)[0]
+            user    = User.objects.filter(email = uname)[0]
+        except:
+            return BAD_FIELDS
+
+        active = ActiveChores.objects.filter(chore = chore)
+        if not active.exists():
+            return Response({"error": "chore-nonactive"})
+        activeChore = active[0]
+
+        if chore.responsible is not None and chore.responsible != user:
+            badSC = SocialCredits.objects.filter(user = chore.responsible)[0]
+            badSC.score -= chore.weight // 2
+            badSC.delete()
+            badSC.save()
+
+            badtally = ChoreTallies.objects.filter(user = chore.responsible)[0]
+            badtally.skipped += 1
+            badtally.save()
+
+            goodtally = ChoreTallies.objects.filter(user = user)[0]
+            goodtally.completed += 1
+            goodtally.save()
+
+            goodSC = SocialCredits.objects.filter(user = user)[0]
+            goodSC.score += chore.weight
+            goodSC.save()
+        elif chore.responsible is not None and chore.responsible == user:
+            now = datetime.now()
+            if now <= activeChore.expiry:
+                goodtally = ChoreTallies.objects.filter(user = user)[0]
+                goodtally.completed += 1
+                goodtally.save()
+
+        activeChore.delete()
+        newPast = PastChores(chore = chore, responsible = chore.responsible, completer = user)
+        newPast.save()
+
+        return GOOD
+
+class APIGetTallies(APIView):
+    """
+    leaseid - lease ID for flatmates to get the tallies for
+    """
+    def get(self, request):
+        try:
+            leaseid = int(reques.GET.get("leaseid"))
+        except:
+            return BAD_FIELDS
+
+        return GOOD
 
 class APIGetFlatmates(APIView):
     """

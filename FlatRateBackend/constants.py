@@ -13,9 +13,9 @@ DEFAULT_SOCIAL_CREDITS = 200
 
 # Chore Constants
 NO_PRIORITY         = 0
-LOW_PRIORITY        = 5
-MEDIUM_PRIORITY     = 10
-HIGH_PRIORITY       = 20
+LOW_PRIORITY        = 10
+MEDIUM_PRIORITY     = 20
+HIGH_PRIORITY       = 30
 CHORE_PRIORITIES    = [(NO_PRIORITY,        "No Priority"),
                        (LOW_PRIORITY,       "Low Priority"),
                        (MEDIUM_PRIORITY,    "Medium Priority"),
