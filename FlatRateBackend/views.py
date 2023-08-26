@@ -89,6 +89,9 @@ class APIPostNewUser(APIView):
         if User.objects.filter(email = email).exists():
             return Response({"error": "duplicate_user"})
 
+        add = User(fnames = fnames, sname = sname, email = email)
+        add.save()
+
         if not SocialCredits.objects.filter(user = add).exists():
             creds = SocialCredits(user = add, score = DEFAULT_SOCIAL_CREDITS)
             creds.save()
