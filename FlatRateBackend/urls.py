@@ -14,7 +14,8 @@ urlpatterns = [
 
         path("api-get-flatmates/",      views.APIGetFlatmates.as_view(),    name = "get-flatmates"),
 
-        path("api-get-tallies/",        views.APIGetTally.as_view(),        name = "get-tallies"),
+        path("api-get-tallies/",        views.APIGetTallies.as_view(),      name = "get-tallies"),
+        #path("api-get-socialcredits/",  views.APIGetSocialCredits.as_view(),name = "get-social-credits"),
 
         path("api-burn-everything/",    views.APIBurnEverything.as_view(),  name = "burn-everything")
 ]

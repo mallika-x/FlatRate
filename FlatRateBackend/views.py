@@ -23,15 +23,15 @@ class APIBurnEverything(APIView):
         tables = [
                 #SocialCredits,
                 #Flatmates,
+                ChoreTallies,
                 PastChores,
                 ActiveChores,
                 Chores,
                 Lease,
-                #PastChores,
                 #Schedule,
                 #ScheduleSet,
                 #Notifications
-                User
+                #User
         ]
         for t in tables:
             for r in t.objects.all():
@@ -149,7 +149,7 @@ class APICreateChore(APIView):
     """
     type    - ID of chore type, see api-get-chore-types
     weight  - 0/5/10/20
-    owner   - user responsible or "" for none responsible
+    owner   - user responsible
     expiry  - date & time chore is due
     """
     def post(self, request):
@@ -192,7 +192,8 @@ class APIGetUserChores(APIView):
             return BAD_FIELDS
 
         chores = Chores.objects.filter(responsible = user)
-        return Response([c.id for c in chores])
+        activeChores = [c for c in chores if ActiveChores.objects.filter(chore = c).exists()]
+        return Response([c.id for c in activeChores])
 
 class APIGetOthersChores(APIView):
     """
@@ -213,7 +214,7 @@ class APIGetOthersChores(APIView):
         totChores   = [list(Chores.objects.filter(responsible = m)) for m in others]
         flat        = flatten(totChores)
 
-        return Response([f.id for f in flat])
+        return Response([f.id for f in flat if ActiveChores.objects.filter(chore = f).exists()])
 
 class APICompleteChore(APIView):
     """
@@ -270,11 +271,20 @@ class APIGetTallies(APIView):
     """
     def get(self, request):
         try:
-            leaseid = int(reques.GET.get("leaseid"))
+            leaseid = int(request.GET.get("leaseid"))
+            lease   = Lease.objects.filter(leaseID = leaseid)[0]
         except:
             return BAD_FIELDS
 
-        return GOOD
+        mates = Flatmates.objects.filter(lease = lease)
+        fmusers = [f.user for f in mates]
+        tallies = [ChoreTallies.objects.filter(user = m)[0] for m in fmusers]
+        uids = [u.email for u in fmusers]
+        tallyNums = [(t.completed, t.skipped) for t in tallies]
+        out = dict(zip(uids, tallyNums))
+
+        return Response(out)
+
 
 class APIGetFlatmates(APIView):
     """
