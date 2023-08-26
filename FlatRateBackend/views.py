@@ -6,6 +6,9 @@ from rest_framework.response    import Response
 from FlatRateBackend.models import *
 from .constants             import *
 
+from random import randint
+from sys    import maxsize
+
 # Errors
 BAD_FIELDS_POST = Response({"error": "bad_post_request_fields"})
 SAVE_ERROR      = Response({"error": "could not save"})
@@ -46,7 +49,7 @@ class APIPostNewUser(APIView):
             fnames  = c.get("fnames")
             snames  = c.get("sname")
             email   = c.get("email")
-            leaseid = c.get("leaseid")
+            leaseid = int(c.get("leaseid"))
             pii     = request.FILES.get("pii")
             photo   = request.FILES.get("photo")
         except:
@@ -78,10 +81,36 @@ class APIPostNewUser(APIView):
             else:
                 creds.delete()
                 add.delete()
-                return Response({"error": "invalid-lease-id"})
+                return Response({"accepted": "needs-address"})
+        else:
+            return Response({"accepted": "needs-address"})
 
-        # no else?
 
+        return GOOD
+
+class APIResolveAddress(APIView):
+    """
+    uname   - email of user
+    address - address of their house/flat
+    """
+
+    def post(self, request):
+        try:
+            uname   = request.GET.get("uname")
+            addr    = request.GET.get("address").lower().replace("  ", " ")
+            user    = User.objects.filter(email = uname).all()[0]
+        except:
+            return BAD_FIELDS
+
+        lease = Lease.objects.filter(address = address)
+        if (lease.exists()):
+            new_mate = Flatmates(user = user, lease = lease.all()[0])
+        else:
+            new_lease_id = -1 * randint(maxsize)
+            new_lease = Lease(address = address, leaseID = new_lease_id)
+            new_lease.save() # just pray for no collisions
+            new_mates = Flatmates(lease = new_lease, user = user)
+            new_mates.save()
 
         return GOOD
 

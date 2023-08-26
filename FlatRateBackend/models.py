@@ -23,6 +23,10 @@ class Lease(models.Model):
     leaseID = models.IntegerField(primary_key = True) # TODO format?
     address = models.CharField(max_length = DB_MAXLEN)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields = ["address"], name = "unique_addresses")]
+
 class Flatmates(models.Model):
     lease   = models.ForeignKey(Lease, on_delete = models.CASCADE,  related_name = "flatmates_lease")
     user    = models.ForeignKey(User, on_delete = models.PROTECT,   related_name = "flatmates_user")
