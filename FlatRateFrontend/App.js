@@ -1,20 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+//import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './screens/home';
+import DetailsScreen from './screens/details';
+import { useFonts } from 'expo-font'
+import { Prompt_400Regular } from '@expo-google-fonts/prompt'
+import { Text } from 'react-native';
+
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>This is FlatRate!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  const [fontsLoaded] = useFonts({
+    Prompt_400Regular, // Body
+    'Sansita': require("./assets/SansitaOne-Regular.ttf") // Headings
+  });
+
+  // this displays a loading symbol until fonts have loaded
+  if (!fontsLoaded) return (<><Text>loading</Text></>)
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
