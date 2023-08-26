@@ -4,7 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 export default () => {
         return (
           <View style={styles.container}>
-            <Text>This is the home screen!</Text>
+            <Text>This is the home screen! Login success</Text>
           </View>
     );
 };

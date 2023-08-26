@@ -9,6 +9,6 @@ export default {
     orange: "#D72C23",
     white: "#F8F8F8",
     blue: "#4EB8B6",
-    background : '#EDCCAB',
+    background : '#C8ABED',
     grey: 'grey'
 }

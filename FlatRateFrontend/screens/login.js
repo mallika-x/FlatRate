@@ -69,7 +69,7 @@ export default ({navigation}) => {
   return (
     <SafeAreaView style={styles.engageBgContainer}>
       <View>
-        <Image style={{width:281, height:93}} source={require("../assets/Wordmark.png")}/>
+        <Image style={{width:281, height:300}} source={require("../assets/Flatrate_Logo.png")}/>
       </View>
       <View style={{alignItems:'center'}}>
         <TextInput style = {styles.inputContainer}

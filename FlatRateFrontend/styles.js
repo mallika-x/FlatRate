@@ -14,7 +14,7 @@ export default StyleSheet.create({
 
     engageBgContainer: {
       flex: 1,
-      backgroundColor: '#EDCCAB',
+      backgroundColor: '#C8ABED',
       alignItems: 'center',
       justifyContent: 'space-evenly'
     },
