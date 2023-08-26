@@ -322,7 +322,61 @@ class APIGetChoreHistory(APIView):
         f = open(HISTORY_PATH, "rb")
         return FileResponse(f, filename = "history.csv", as_attachment = True)
 
+class APIGetFlatmates(APIView):
+    """
+    uname   - email of user to get the flatmates of
+    """
+    def get(self, request):
+        try:
+            uname = request.GET.get("uname")
+            user = User.objects.filter(email = uname)[0]
+        except:
+            return BAD_FIELDS
 
+        lease = Flatmates.objects.filter(user = user)[0].lease
+        mates = [f.user.email for f in Flatmates.objects.filter(lease = lease) if f.user != user]
+
+        return Response(mates)
+
+class APIChangeLease(APIView):
+    """
+    uname   - email of user to change lease ID
+    leaseid - new lease ID
+    address - address of new tenancy
+    """
+    def post(self, request):
+        try:
+            leaseid = int(request.POST.get("leaseid"))
+            uname   = request.POST.get("uname")
+            user    = User.objects.filter(email = uname)[0]
+            address = request.POST.get("address")[0].replace("  ", " ")
+        except:
+            return BAD_FIELDS
+
+        fmates      = Flatmates.objects.filter(user = user)[0]
+        oldLease    = fmates.lease
+        if oldLease.leaseID == leaseid:
+            return Response({"error": "same_lease_id"})
+
+        newLease = Lease.objects.filter(leaseID = leaseid)
+        if newLease.exists():
+            fmates.lease = newLease[0]
+            fmates.save()
+            return Response({"good": newLease[0].leaseID})
+        else:
+            leaseCand = Lease.objects.filter(address = address)
+            if leaseCand.exists():
+                fmates.lease = leaseCand[0]
+                fmates.save()
+                return Response({"good": leaseCand[0].leaseID})
+            else:
+                new_lease_id = -1 * randint(1, LARGE_ENOUGH)
+                newLease = Lease(address = address, leaseID = new_lease_id)
+                newLease.save() # just pray for no collisions
+                fmates.lease = newLease
+                fmates.save()
+                return Response({"good": new_lease_id})
+        return Response({"error": "unknown_err"})
 
 class APIGetTallies(APIView):
     """
@@ -358,19 +412,3 @@ class APIGetSocialCredits(APIView):
 
         score = SocialCredits.objects.filter(user = user)[0].score
         return Response({uname: score})
-
-class APIGetFlatmates(APIView):
-    """
-    uname   - email of user to get the flatmates of
-    """
-    def get(self, request):
-        try:
-            uname = request.GET.get("uname")
-            user = User.objects.filter(email = uname)[0]
-        except:
-            return BAD_FIELDS
-
-        lease = Flatmates.objects.filter(user = user)[0].lease
-        mates = [f.user.email for f in Flatmates.objects.filter(lease = lease) if f.user != user]
-
-        return Response(mates)

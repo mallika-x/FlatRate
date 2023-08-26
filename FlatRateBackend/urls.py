@@ -15,6 +15,7 @@ urlpatterns = [
         path("api-get-chore-history/",  views.APIGetChoreHistory.as_view(), name = "chore-history"),
 
         path("api-get-flatmates/",      views.APIGetFlatmates.as_view(),    name = "get-flatmates"),
+        path("api-change-lease/",       views.APIChangeLease.as_view(),     name = "change-lease"),
 
         path("api-get-tallies/",        views.APIGetTallies.as_view(),      name = "get-tallies"),
         path("api-get-socialcredits/",  views.APIGetSocialCredits.as_view(),name = "get-social-credits"),

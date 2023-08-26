@@ -1,6 +1,7 @@
 from requests   import get, post
 from os         import system, remove
 from sys        import argv
+from random     import randint
 
 base = "http://10.89.211.86:8000/flatrate/api-"
 
@@ -18,7 +19,10 @@ endpoints = [
     ("get-others-chores",   get),
     ("get-flatmates",       get),
     ("get-tallies",         get),
-    ("get-socialcredits",   get)
+    ("get-socialcredits",   get),
+    ("change-lease",        post),
+    ("change-lease",        post),
+    ("change-lease",        post),
     ]
 
 paramses = [
@@ -73,6 +77,18 @@ paramses = [
         "leaseid":  222
     }, {
         "uname":    "jsmith@outlook.com"
+    }, {
+        "uname":    "jsmith@outlook.com",
+        "leaseid":  "0",
+        "address":  "123 cringe street, inala"
+    }, {
+        "uname":    "jsmith@outlook.com",
+        "leaseid":  "0",
+        "address":  f"deleteme {str(randint(0, 1000000))}"
+    }, {
+        "uname":    "jsmith@outlook.com",
+        "leaseid":  222,
+        "address":  "shouldn't matter"
     }
 ]
 
