@@ -10,6 +10,7 @@ import Login from './screens/login';
 import Details from './screens/details';
 import CreateAccount from './screens/createAccount';
 import Home from './screens/home';
+import NoRoomies from './screens/noRoomies';
 import Tasks from './screens/tasks';
 import Settings from './screens/settings';
 import Roomies from './screens/roomies';
@@ -38,6 +39,7 @@ const MainApp = () => {
         Settings
       */}
       <Tabs.Screen name="Home" component={Home}/>
+      <Tabs.Screen name="No Mates" component={NoRoomies}/>
       <Tabs.Screen name="Tasks" component={Tasks}/>
       <Tabs.Screen name="Roomies" component={Roomies}/>
       <Tabs.Screen name="Settings" component={Settings}/>
