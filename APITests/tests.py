@@ -15,7 +15,8 @@ endpoints = [
     ("create-chore",        post),
     ("create-chore",        post),
     ("get-user-chores",     get),
-    ("get-others-chores",   get)
+    ("get-others-chores",   get),
+    ("get-flatmates",       get)
     ]
 
 paramses = [
@@ -64,6 +65,8 @@ paramses = [
     }, {
         "leaseid":  222,
         "exclude":  "jsmith@outlook.com"
+    }, {
+        "uname": "jsmith@outlook.com"
     }
 ]
 

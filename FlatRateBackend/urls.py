@@ -11,5 +11,7 @@ urlpatterns = [
         path("api-get-user-chores/",    views.APIGetUserChores.as_view(),   name = "get-user-chores"),
         path("api-get-others-chores/",  views.APIGetOthersChores.as_view(), name = "get-others-chores"),
 
+        path("api-get-flatmates/",      views.APIGetFlatmates.as_view(),    name = "get-flatmates"),
+
         path("api-burn-everything/",    views.APIBurnEverything.as_view(),  name = "burn-everything")
 ]

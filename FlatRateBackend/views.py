@@ -215,3 +215,20 @@ class APIGetOthersChores(APIView):
         flat        = flatten(totChores)
 
         return Response([f.id for f in flat])
+
+
+class APIGetFlatmates(APIView):
+    """
+    uname   - email of user to get the flatmates of
+    """
+    def get(self, request):
+        try:
+            uname = request.GET.get("uname")
+            user = User.objects.filter(email = uname)[0]
+        except:
+            return BAD_FIELDS
+
+        lease = Flatmates.objects.filter(user = user)[0].lease
+        mates = [f.user.email for f in Flatmates.objects.filter(lease = lease) if f.user != user]
+
+        return Response(mates)
