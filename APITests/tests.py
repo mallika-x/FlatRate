@@ -1,10 +1,13 @@
 from requests   import get, post
 from os         import system, remove
+from sys        import argv
 
 base = "http://10.89.211.86:8000/flatrate/api-"
 
 endpoints = [
     ("post-new-user",   post),
+    ("post-new-user",   post),
+    ("resolve-address", post),
     ("resolve-address", post),
     ("try-login",       get),
     ("create-chore",    post),
@@ -16,9 +19,17 @@ paramses = [
         "fnames":   "Jane Mary",
         "sname":    "Doe",
         "email":    "jmdoe@gmail.com",
-        "leaseid":  222
+        "leaseid":  0
+    }, {
+        "fnames":   "John",
+        "sname":    "Smith",
+        "email":    "jsmith@outlook.com",
+        "leaseid":  0
     }, {
         "uname":    "jmdoe@gmail.com",
+        "address":  "123 Cringe Street, Inala"
+    }, {
+        "uname":    "jsmith@outlook.com",
         "address":  "123 Cringe Street, Inala"
     }, {
         "username": "jmdoe@gmail.com"
@@ -56,7 +67,8 @@ def main():
             f.write(res.text)
             f.close
 
-    print(post(f"{base}burn-everything/").text[2:-2])
+    if argv[1] == "kill":
+        print(post(f"{base}burn-everything/").text[2:-2])
     system("rm /home/bingers/MICASA/FlatRate/media/* 2>  /dev/null")
 
 if __name__ == "__main__":

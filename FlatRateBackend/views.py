@@ -123,6 +123,7 @@ class APIResolveAddress(APIView):
         lease = Lease.objects.filter(address = addr)
         if (lease.exists()):
             new_mate = Flatmates(user = user, lease = lease.all()[0])
+            new_lease_id = new_mate.lease.leaseID
         else:
             new_lease_id = -1 * randint(1, LARGE_ENOUGH)
             new_lease = Lease(address = addr, leaseID = new_lease_id)
@@ -130,7 +131,7 @@ class APIResolveAddress(APIView):
             new_mates = Flatmates(lease = new_lease, user = user)
             new_mates.save()
 
-        return GOOD
+        return Response({"good": new_lease_id})
 
 # Chore things
 class APIGetChoreTypes(APIView):
@@ -148,15 +149,10 @@ class APICreateChore(APIView):
     def post(self, request):
         try:
             c       = request.POST
-            print(1)
             ctype   = int(c.get("type"))
-            print(2)
             weight  = int(c.get("weight"))
-            print(3)
             owner   = c.get("owner")
-            print(4, c.get("expiry"))
             expiry  = datetime.strptime(c.get("expiry"), DATETIME_FMT)
-            print(5)
             rtype   = ChoreTypes.objects.filter(id = ctype)[0]
             userrsp = User.objects.filter(email = owner)[0]
         except:
