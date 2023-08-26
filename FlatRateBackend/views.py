@@ -38,6 +38,7 @@ class APIPostNewUser(APIView):
     pii     - new user's personal documents as b64
     email   - new user's email
     photo   - new user's photo as b64
+    leaseid - lease ID from RTA or "0" if n/a
     """
     def post(self, request):
         try:
@@ -45,6 +46,7 @@ class APIPostNewUser(APIView):
             fnames  = c.get("fnames")
             snames  = c.get("sname")
             email   = c.get("email")
+            leaseid = c.get("leaseid")
             pii     = request.FILES.get("pii")
             photo   = request.FILES.get("photo")
         except:
@@ -62,6 +64,24 @@ class APIPostNewUser(APIView):
         except:
             add.delete()
             return SAVE_ERROR
+
+        if (leaseid):
+            search = Lease.objects.filter(leaseID = leaseid)
+            if search.exists():
+                new_mate = Flatmates(lease = search, user = add)
+                try:
+                    new_mate.save()
+                except:
+                    creds.delete()
+                    add.delete()
+                    return SAVE_ERROR
+            else:
+                creds.delete()
+                add.delete()
+                return Response({"error": "invalid-lease-id"})
+
+        # no else?
+
 
         return GOOD
 
