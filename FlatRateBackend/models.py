@@ -12,9 +12,6 @@ class User(models.Model):
     email   = models.EmailField(max_length = EMAILMAXLEN, primary_key = True)
     fnames  = models.CharField(max_length = FNAMESMAXLEN)
     sname   = models.CharField(max_length = SNAMEMAXLEN)
-    # WORK FFS
-    #pii     = models.FileField() # see if this works without upload_to param
-    #photo   = models.ImageField()   # this too
 
 class SocialCredits(models.Model):
     user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_social_credits")

@@ -86,12 +86,8 @@ class APIPostNewUser(APIView):
         except:
             return NEXIST_FLD
 
-        add = User(fnames = fnames, sname = sname, email = email)
-        try:
-            add.save()
-        except:
-            print("no")
-            return SAVE_ERROR
+        if User.objects.filter(email = email).exists():
+            return Response({"error": "duplicate_user"})
 
         if not SocialCredits.objects.filter(user = add).exists():
             creds = SocialCredits(user = add, score = DEFAULT_SOCIAL_CREDITS)
