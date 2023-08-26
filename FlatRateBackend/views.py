@@ -22,8 +22,8 @@ class APIBurnEverything(APIView):
                 SocialCredits,
                 Lease,
                 #Flatmates,
-                #Chores,
-                #AciveChores,
+                Chores,
+                ActiveChores,
                 #PastChores,
                 #Schedule,
                 #ScheduleSet,
@@ -148,22 +148,27 @@ class APICreateChore(APIView):
     def post(self, request):
         try:
             c       = request.POST
+            print(1)
             ctype   = int(c.get("type"))
+            print(2)
             weight  = int(c.get("weight"))
+            print(3)
             owner   = c.get("owner")
-            expiry  = datetime.strptime(c.get("expiry", DATETIME_FMT))
+            print(4, c.get("expiry"))
+            expiry  = datetime.strptime(c.get("expiry"), DATETIME_FMT)
+            print(5)
             rtype   = ChoreTypes.objects.filter(id = ctype)[0]
             userrsp = User.objects.filter(email = owner)[0]
         except:
             return BAD_FIELDS
 
-        add = Chore(choreType = rtype, weight = weight, responsible = owner)
+        add = Chores(choreType = rtype, weight = weight, responsible = userrsp)
         try:
             add.save()
         except:
             return SAVE_ERROR
 
-        active = ActiveChore(chore = add, expiry = expiry)
+        active = ActiveChores(chore = add, expiry = expiry)
         try:
             active.save()
         except:

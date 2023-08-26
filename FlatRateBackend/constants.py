@@ -30,7 +30,7 @@ NOTIF_BODIES    = [(UPCOMING_CHORE, "Upcoming Chore"),
                    (SHAME,          "Shame")]
 
 # Date time Constants
-DATETIME_FMT = "%H:%m:%S %d/%m/%Y"
+DATETIME_FMT = "%H:%M:%S %d/%m/%Y"
 
 # Randomness COnstants
 LARGE_ENOUGH = 1000000

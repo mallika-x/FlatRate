@@ -24,7 +24,8 @@ paramses = [
     }, {
         "type":     1,
         "weight":   15,
-        "owner":    "jmdoe@gmail.com"
+        "owner":    "jmdoe@gmail.com",
+        "expiry":   "18:30:00 2/11/2023"
     }
 ]
 
