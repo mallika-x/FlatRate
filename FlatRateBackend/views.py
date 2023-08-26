@@ -286,6 +286,20 @@ class APIGetTallies(APIView):
         return Response(out)
 
 
+class APIGetSocialCredits(APIView):
+    """
+    uname   - email of user to get the social credit score of
+    """
+    def get(self, request):
+        try:
+            uname = request.GET.get("uname")
+            user = User.objects.filter(email = uname)[0]
+        except:
+            return BAD_FIELDS
+
+        score = SocialCredits.objects.filter(user = user)[0].score
+        return Response({uname: score})
+
 class APIGetFlatmates(APIView):
     """
     uname   - email of user to get the flatmates of

@@ -17,7 +17,8 @@ endpoints = [
     ("get-user-chores",     get),
     ("get-others-chores",   get),
     ("get-flatmates",       get),
-    ("get-tallies",         get)
+    ("get-tallies",         get),
+    ("get-socialcredits",   get)
     ]
 
 paramses = [
@@ -67,9 +68,11 @@ paramses = [
         "leaseid":  222,
         "exclude":  "jsmith@outlook.com"
     }, {
-        "uname": "jsmith@outlook.com"
+        "uname":    "jsmith@outlook.com"
     }, {
         "leaseid":  222
+    }, {
+        "uname":    "jsmith@outlook.com"
     }
 ]
 
