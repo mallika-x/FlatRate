@@ -4,8 +4,9 @@ from os         import system, remove
 base = "http://10.89.211.86:8000/flatrate/api-"
 
 endpoints = [
-    ("post-new-user",   post),
-    ("try-login",       get)
+    ("post-new-user",       post),
+    ("try-login",           get),
+    ("create-chore",    post),
     ]
 
 paramses = [
@@ -16,6 +17,10 @@ paramses = [
         "leaseid":  222
     }, {
         "username": "jmdoe@gmail.com"
+    }, {
+        "type":     1,
+        "weight":   15,
+        "owner":    "jmdoe@gmail.com"
     }
 ]
 
@@ -23,7 +28,7 @@ fileses = [
     {
         "pii":      open("/home/bingers/Desktop/fakepassport.png",    "rb"),
         "photo":    open("/home/bingers/Desktop/fakephoto.jpg",       "rb")
-    }, {None: None}
+    }, {None: None}, {None: None}
 ]
 
 def main():
@@ -51,7 +56,7 @@ def main():
             f.close
 
     print(post(f"{base}burn-everything/").text[2:-2])
-    system("rm /home/bingers/MICASA/FlatRate/media/*")
+    system("rm /home/bingers/MICASA/FlatRate/media/* 2>  /dev/null")
 
 if __name__ == "__main__":
     main()

@@ -3,3 +3,4 @@ FlatRateBackend/migrations/
 FlatRate/__pycache__/
 FlatRateBackend/__pycache__/
 media/*
+APITests/*.html

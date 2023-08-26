@@ -36,6 +36,7 @@ class Flatmates(models.Model):
 
 class ChoreTypes(models.Model):
     name    = models.CharField(max_length = DB_MAXLEN)
+    #key     = models.AutoField(primary_key = True)
 
     class Meta:
         constraints = [

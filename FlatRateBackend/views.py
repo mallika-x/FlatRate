@@ -14,7 +14,28 @@ BAD_FIELDS  = Response({"error": "bad_post_request_fields"})
 SAVE_ERROR  = Response({"error": "could not save"})
 GOOD        = Response(["good"])
 
-# GET REQUESTS
+# NEVER TOUCH THIS
+class APIBurnEverything(APIView):
+    def post(self, request):
+        tables = [
+                User,
+                SocialCredits,
+                #Lease,
+                #Flatmates,
+                #Chores,
+                #AciveChores,
+                #PastChores,
+                #Schedule,
+                #ScheduleSet,
+                #Notifications
+        ]
+        for t in tables:
+            for r in t.objects.all():
+                r.delete()
+
+        return Response({"Killed everything"})
+
+# Account things
 class APITryLogin(APIView):
     """
     username - email of user attempting to log in
@@ -33,7 +54,6 @@ class APITryLogin(APIView):
 
         return resp
 
-# POST REQUESTS
 class APIPostNewUser(APIView):
     """
     fnames  - new user's given name(s) as a single string
@@ -114,23 +134,33 @@ class APIResolveAddress(APIView):
 
         return GOOD
 
-# NEVER TOUCH THIS
-class APIBurnEverything(APIView):
-    def post(self, request):
-        tables = [
-                User,
-                SocialCredits,
-                #Lease,
-                #Flatmates,
-                #Chores,
-                #AciveChores,
-                #PastChores,
-                #Schedule,
-                #ScheduleSet,
-                #Notifications
-        ]
-        for t in tables:
-            for r in t.objects.all():
-                r.delete()
+# Chore things
+class APIGetChoreTypes(APIView):
+    """No params, returns list<str>"""
+    def get(self, request):
+        return Response({c.id: c.name for c in ChoreTypes.objects.all()})
 
-        return Response({"Killed everything"})
+class APICreateChore(APIView):
+    """
+    type    - ID of chore type, see api-get-chore-types
+    weight  - 0/5/10/20
+    owner   - user responsible or "" for none responsible
+    """
+    def post(self, request):
+        try:
+            c       = request.POST
+            ctype   = int(c.get("type"))
+            weight  = int(c.get("weight"))
+            owner   = c.get("owner")
+            rtype   = ChoreTypes.objects.filter(id = ctype)[0]
+            userrsp = User.objects.filter(email = owner)[0]
+        except:
+            return BAD_FIELDS
+
+        add = Chore(choreType = rtype, weight = weight, responsible = owner)
+        try:
+            add.save()
+        except:
+            return SAVE_ERROR
+
+        return GOOD
