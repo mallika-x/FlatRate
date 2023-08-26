@@ -5,8 +5,8 @@ from sys        import argv
 base = "http://10.89.211.86:8000/flatrate/api-"
 
 endpoints = [
-    ("post-new-user",       post),
-    ("post-new-user",       post),
+    #("post-new-user",       post),
+    #("post-new-user",       post),
     ("post-new-user",       post),
     ("resolve-address",     post),
     ("try-login",           get),
@@ -23,16 +23,16 @@ endpoints = [
 
 paramses = [
     {
-        "fnames":   "Jane Mary",
-        "sname":    "Doe",
-        "email":    "jmdoe@gmail.com",
-        "leaseid":  222
-    }, {
-        "fnames":   "John",
-        "sname":    "Smith",
-        "email":    "jsmith@outlook.com",
-        "leaseid":  222
-    }, {
+#        "fnames":   "Jane Mary",
+#        "sname":    "Doe",
+#        "email":    "jmdoe@gmail.com",
+#        "leaseid":  222
+#    }, {
+#        "fnames":   "John",
+#        "sname":    "Smith",
+#        "email":    "jsmith@outlook.com",
+#        "leaseid":  222
+#    }, {
         "fnames":   "Homeowner",
         "sname":    "Person",
         "email":    "a@gmail.com",
