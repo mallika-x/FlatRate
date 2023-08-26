@@ -3,6 +3,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from FlatRateBackend.models import *
+
 # Errors
 BAD_FIELDS_POST = Response({"error": "bad_post_request_fields"})
 SAVE_ERROR      = Response({"error": "could not save"})
