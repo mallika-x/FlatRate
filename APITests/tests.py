@@ -50,7 +50,7 @@ def main():
             f.close
 
     print(post(f"{base}burn-everything/").text[2:-2])
-
+    system("rm /home/bingers/MICASA/FlatRate/media/*")
 
 if __name__ == "__main__":
     main()
