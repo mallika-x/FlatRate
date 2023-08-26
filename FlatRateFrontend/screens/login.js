@@ -16,41 +16,44 @@ export default ({navigation}) => {
   const onLogin = async () => {
     if (globals.backendOn) {
       try {
-        console.log("about to fetch");      
-        const respRaw = await fetch(endpoints.loginPoint, {
+        console.log("about to fetch");
+        const respRaw = await fetch(`${endpoints.loginPoint}?username=${username}`);
+        /*const respRaw = await fetch(endpoints.loginPoint, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',          
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             username: username,
             password: password,
           })
-      });
-      const resp = await respRaw.json();
-      console.log(resp);
-      if (resp.token) {
-        console.log("success");
-        // do something with the token later
-        await setItemAsync("authToken", resp.token);
-        global.token = resp.token;
-        navigation.navigate('Details');
-        setLoginError("");
-        
-      } else {
-        // couldn't log in
-        console.log("no success");
-        setLoginError("invalid username/password combination");
-        // display a message
-      }
+        });*/
+        const resp = await respRaw.json();
+        console.log(resp);
+        // if (resp.token) {
+        if (resp["access"] == "approved") {
+          console.log("success");
+          // do something with the token later
+          // await setItemAsync("authToken", resp.token);
+          // global.token = resp.token;
+          navigation.navigate('MainApp');
+          setLoginError("");
+          
+        } else {
+          // couldn't log in
+          console.log("no success");
+          setLoginError("invalid username/password combination");
+          // display a message
+        }
       
       } catch (err) {
         // Do something creative with the error here.
         console.warn(err);
       }
-  } else {
-    navigation.navigate('DetailsScreen');
-  }
+    } else {
+      //navigation.navigate('DetailsScreen');
+      navigation.navigate('MainApp');
+    }
   };
 
   useEffect(() => {
