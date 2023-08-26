@@ -57,8 +57,13 @@ class PastChores(models.Model):
     completer   = models.ForeignKey(User, on_delete = models.PROTECT,               related_name = "chores_past_completer")
     doneDate    = models.DateField(auto_now_add = True)
 
+class ChoreTallies(models.Model):
+    user    = models.ForeignKey(User, on_delete = models.PROTECT, related_name = "user_tallies")
+    done    = models.IntegerField()
+    skipped = models.IntegerField()
+
 class Schedule(models.Model):
-    flatmates   = models.ForeignKey(Flatmates, on_delete = models.CASCADE, related_name = "flatmats_schedule")
+    flatmates   = models.ForeignKey(Flatmates, on_delete = models.CASCADE, related_name = "flatmates_schedule")
     initDate    = models.DateField(auto_now_add = True)
     duration    = models.IntegerField()
 
