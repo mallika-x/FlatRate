@@ -7,6 +7,7 @@ base = "http://10.89.211.86:8000/flatrate/api-"
 endpoints = [
     ("post-new-user",   post),
     ("post-new-user",   post),
+    ("post-new-user",   post),
     ("resolve-address", post),
     ("resolve-address", post),
     ("try-login",       get),
@@ -27,6 +28,11 @@ paramses = [
         "sname":    "Smith",
         "email":    "jsmith@outlook.com",
         "leaseid":  0
+    }, {
+        "fnames":   "Homeowner",
+        "sname":    "Person",
+        "email":    "a@gmail.com",
+        "leaseid":  222
     }, {
         "uname":    "jmdoe@gmail.com",
         "address":  "123 Cringe Street, Inala"

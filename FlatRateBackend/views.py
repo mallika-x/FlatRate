@@ -32,7 +32,8 @@ class APIBurnEverything(APIView):
         ]
         for t in tables:
             for r in t.objects.all():
-                r.delete()
+                if t != Lease or "Bracken Ridge" not in r.address:
+                    r.delete()
 
         return Response({"Killed everything"})
 
@@ -89,7 +90,7 @@ class APIPostNewUser(APIView):
         if (leaseid):
             search = Lease.objects.filter(leaseID = leaseid)
             if search.exists():
-                new_mate = Flatmates(lease = search, user = add)
+                new_mate = Flatmates(lease = search[0], user = add)
                 try:
                     new_mate.save()
                 except:
@@ -187,3 +188,5 @@ class APIGetUserChores(APIView):
 
         chores = Chores.objects.filter(responsible = user)
         return Response([c.id for c in chores])
+
+#class APIGetOthersChores(APIView):
