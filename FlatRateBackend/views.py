@@ -11,7 +11,7 @@ from sys        import maxsize
 from datetime   import datetime
 
 # Errors
-BAD_FIELDS  = Response({"error": "bad_post_request_fields"})
+BAD_FIELDS  = Response({"error": "bad_request_fields"})
 SAVE_ERROR  = Response({"error": "could not save"})
 GOOD        = Response(["good"])
 
@@ -175,7 +175,17 @@ class APICreateChore(APIView):
 
         return GOOD
 
-#class APIGetUserChores(APIView):
-#    """
+class APIGetUserChores(APIView):
+    """
+    uname   - email of user to get the chores for.
+    Returns chore IDs to query further
+    """
+    def get(self, request):
+        try:
+            uname   = request.GET.get("uname")
+            user    = User.objects.filter(email = uname)[0]
+        except:
+            return BAD_FIELDS
 
-#    """
+        chores = Chores.objects.filter(responsible = user)
+        return Response([c.id for c in chores])

@@ -43,7 +43,7 @@ def main():
         else:
             res = method(f"{base}{url}/", params = params)
         if (res.status_code == 200):
-            print(url + "\tpassed")
+            print(url + "\tpassed", res.text)
             try:
                 remove(f"{url}.html")
             except:
@@ -55,7 +55,7 @@ def main():
             f.write(res.text)
             f.close
 
-    print(post(f"{base}burn-everything/").text[2:-2])
+    #print(post(f"{base}burn-everything/").text[2:-2])
     system("rm /home/bingers/MICASA/FlatRate/media/* 2>  /dev/null")
 
 if __name__ == "__main__":
