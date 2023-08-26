@@ -10,9 +10,9 @@ from random import randint
 from sys    import maxsize
 
 # Errors
-BAD_FIELDS_POST = Response({"error": "bad_post_request_fields"})
-SAVE_ERROR      = Response({"error": "could not save"})
-GOOD            = Response(["good"])
+BAD_FIELDS  = Response({"error": "bad_post_request_fields"})
+SAVE_ERROR  = Response({"error": "could not save"})
+GOOD        = Response(["good"])
 
 # GET REQUESTS
 class APITryLogin(APIView):
