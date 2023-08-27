@@ -8,7 +8,7 @@ base = "http://10.89.211.86:8000/flatrate/api-"
 endpoints = [
     #("post-new-user",       post),
     #("post-new-user",       post),
-    #("post-new-user",       post),
+    ("post-new-user",       post),
     #("resolve-address",     post),
     ("try-login",           get),
     ("create-chore",        post),
@@ -37,14 +37,12 @@ paramses = [
 #        "email":    "jsmith@outlook.com",
 #        "leaseid":  222
 #    }, {
-#        "fnames":   "Homeowner",
-#        "sname":    "Person",
-#        "email":    "a@gmail.com",
-#        "leaseid":  0
-#    }, {
-#        "uname":    "a@gmail.com",
-#        "address":  "123 Cringe Street, Inala"
-#    }, {
+        "fnames":   "Homeowner",
+        "sname":    "Person",
+        "email":    "a@gmail.com",
+        "leaseid":  0,
+        "address":  "123 Cringe Street, Inala"
+    }, {
         "username": "jmdoe@gmail.com"
     }, {
         "type":     1,
@@ -93,7 +91,7 @@ paramses = [
 ]
 
 def main():
-    system("clear")
+    #system("clear")
     combined = list(zip(endpoints, paramses))
     for i in combined:
         #print(i)
@@ -104,7 +102,10 @@ def main():
         else:
             res = method(f"{base}{url}/", data = params)
         if (res.status_code == 200):
-            print(url + "\tpassed", res.text)
+            if "allies" not in url:
+                print(url + "\tpassed", res.text)
+            else:
+                print(url + "\tpassed")
             try:
                 remove(f"{url}.html")
             except:
@@ -118,7 +119,7 @@ def main():
 
     if argv[1] == "kill":
         print(post(f"{base}burn-everything/").text[2:-2])
-    system("rm /home/bingers/MICASA/FlatRate/media/* 2>  /dev/null")
+    #system("rm /home/bingers/MICASA/FlatRate/media/* 2>  /dev/null")
 
 if __name__ == "__main__":
     main()

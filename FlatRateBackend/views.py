@@ -17,6 +17,9 @@ import  matplotlib.pyplot   as      plt
 from    matplotlib.colors   import  LinearSegmentedColormap
 
 flatten = lambda ll: [] if len(ll) == 0 else ll[0] + flatten(ll[1:])
+ct2n    = lambda i: ChoreTypes.objects.filter(id = i)[0].name
+d2s     = lambda d: d.strftime(DATE_FMT)
+u2n     = lambda u: u.fnames.split()[0] + " " + u.sname
 
 # Errors
 NEXIST_FLD  = Response({"error": "field doesn't exist"})
@@ -34,7 +37,7 @@ class APIBurnEverything(APIView):
                 PastChores,
                 ActiveChores,
                 Chores,
-                Lease,
+                #Lease,
                 #Schedule,
                 #ScheduleSet,
                 #Notifications
@@ -284,7 +287,45 @@ class APICompleteChore(APIView):
         newPast = PastChores(chore = chore, responsible = chore.responsible, completer = user)
         newPast.save()
 
+        lease = Flatmates.objects.filter(user = user)[0].lease
+        mates = Flatmates.objects.filter(lease = lease)
+        fmusers = [f.user for f in mates]
+        tallies = [ChoreTallies.objects.filter(user = m)[0] for m in fmusers]
+        names = [u.fnames.split()[0] for u in fmusers]
+        completed = [[t.completed] for t in tallies]
+        skipped = [[t.skipped] for t in tallies]
+
+        self._draw_ratios(names, lease.leaseID, completed, skipped)
+
+
         return GOOD
+
+    def _draw_ratios(self, names, leaseid, completed, skipped):
+        cmapg=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256)
+        cmapb=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256)
+        size = len(names)
+
+        fig, axs = plt.subplots(1,2)
+        a1 = axs[0].imshow(completed, cmap=cmapg,
+                    vmin=0, vmax=size, aspect='auto',
+                    interpolation='nearest')
+        a2 = axs[1].imshow(skipped, cmap=cmapb,
+                    vmin=0, vmax=size, aspect='auto',
+                    interpolation='nearest')
+
+        for i in range(size):
+            axs[0].annotate(str(completed[i])[1:-1], xy=(0, i), ha='center', va='center', color='black')
+            axs[1].annotate(str(skipped[i])[1:-1], xy=(0, i), ha='center', va='center', color='black')
+
+        for ax,l in zip(axs,['Completed','Skipped',]):
+            ax.set_xticks([])
+            ax.set_xlabel(l)
+        axs[0].set_yticks(list(range(size)))
+        axs[0].tick_params(length = 0)
+        axs[0].set_yticklabels(names[:size])
+        axs[1].set_yticks([])
+
+        plt.savefig(f"media/{leaseid}.png", transparent = True)
 
 class APIGetChoreDetails(APIView):
     """
@@ -306,10 +347,6 @@ class APIGetChoreHistory(APIView):
     """
 
     def get(self, request):
-        ct2n = lambda i: ChoreTypes.objects.filter(id = i)[0].name
-        d2s = lambda d: d.strftime(DATE_FMT)
-        u2n = lambda u: u.fnames.split()[0] + " " + u.sname
-
         existing = []
         if path.exists(HISTORY_PATH):
             f = open(HISTORY_PATH, "r")
@@ -404,46 +441,11 @@ class APIGetTallies(APIView):
         except:
             return BAD_FIELDS
 
-        #mates = Flatmates.objects.f
-
-        """
-        mates = Flatmates.objects.filter(lease = lease)
-        fmusers = [f.user for f in mates]
-        tallies = [ChoreTallies.objects.filter(user = m)[0] for m in fmusers]
-        uids = [u.email for u in fmusers]
-        tallyNums = [(t.completed, t.skipped) for t in tallies]
-        out = dict(zip(uids, tallyNums))
-
-        return Response(out)
-        """
-
-    def _draw_ratios(names, leaseid, completed, skipped):
-        cmapg=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256)
-        cmapb=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256)
-
-        fig, axs = plt.subplots(1,2)
-        a1 = axs[0].imshow(data1, cmap=cmapg,
-                    vmin=0, vmax=10, aspect='auto',
-                    interpolation='nearest')
-        a2 = axs[1].imshow(data2, cmap=cmapb,
-                    vmin=0, vmax=10, aspect='auto',
-                    interpolation='nearest')
-
-        for i in nrows:
-            axs[0].annotate(str(data1[i])[1:-1], xy=(0, i), ha='center', va='center', color='black')
-
-        for i in nrows:
-            axs[1].annotate(str(data2[i])[1:-1], xy=(0, i), ha='center', va='center', color='black')
-
-        for ax,l in zip(axs,['Completed','Skipped',]):
-            ax.set_xticks([])
-            ax.set_xlabel(l)
-        axs[0].set_yticks(list(nrows))
-        axs[0].tick_params(length = 0)
-        axs[0].set_yticklabels(names[:len(nrows)])
-        axs[1].set_yticks([])
-
-        plt.savefig(f"{leaseid}.png", transparent = True)
+        try:
+            f = open(f"media/{leaseid}.png", "rb")
+            return FileResponse(f, filename = f"{leaseid}.png", as_attachment = True)
+        except:
+            return Response({"error": "tallies_not_generated_yet_do_a_chore_first"})
 
 
 class APIGetSocialCredits(APIView):
