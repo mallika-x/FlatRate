@@ -443,7 +443,7 @@ class APIGetTallies(APIView):
 
         try:
             f = open(f"media/{leaseid}.png", "rb")
-            return FileResponse(f, filename = f"{leaseid}.png", as_attachment = True)
+            return FileResponse(f, filename = "tallies.png", as_attachment = True)
         except:
             return Response({"error": "tallies_not_generated_yet_do_a_chore_first"})
 
