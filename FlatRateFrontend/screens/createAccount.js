@@ -11,7 +11,7 @@ import colors from '../colors';
 export default ({navigation}) => {
     const [name, onChangeName] = useState('');
     const [email, onChangeEmail] = useState('');
-    const [confirmEmail, onChangeConfirmEmail] = useState('');
+    const [address, onChangeAddress] = useState('');
     const [leaseID, onChangeLeaseID] = useState('');
     const [password, onChangePassword] = useState('');
     const [confirmPassword, onChangeConfirmPassword] = useState('');
@@ -22,15 +22,19 @@ export default ({navigation}) => {
             try {
                 
                 console.log("about to fetch for create account");
-
+                // Split names
+                const names = name.split(' ');
+                const firstNames = names[0]
+                const surname = names[1]
                 // Create account form
                 const form = new FormData();
-                form.append("realName", name);
-                form.append("username", email);
-                form.append("email", confirmEmail);
-                form.append("leaseID", leaseID);
-                form.append("password", password);
-                form.append("confirmedPassword", confirmPassword);
+                form.append("fnames", firstNames);
+                form.append("sname", surname);
+                form.append("address", address);
+                form.append("leaseid", leaseID);
+                form.append("email", email);
+                //form.append("password", password);
+                //form.append("confirmedPassword", confirmPassword);
 
                 // Get response from backend
                 const resp = await fetch(endpoints.registerPoint, {
@@ -38,11 +42,12 @@ export default ({navigation}) => {
                     body: form
                 });
                 const reply = await resp.json();
+                console.log(reply)
                 
-                if (reply.status == "success") {
+                if (reply[0] == "good") {
                     console.log("success");
-                    console.log(reply);          
-                    
+                    navigation.navigate("MainApp");
+                    /*         
                     // now we get a token and then login
                     // automatically to save the user
                     // having to do it 
@@ -64,14 +69,14 @@ export default ({navigation}) => {
                         navigation.navigate("HomeScreen");
                     } else { // No token recieved :(
                         console.log("why no token");
-                    }
+                    }*/
                 
                 // Account creation failed
                 } else {
                     console.log("no success");
-                    console.log(reply.status);
-                    console.log(reply.err);
-                    setPasswordError(reply.messages);
+                    console.log(reply.error);
+                    //console.log(reply.err);
+                    //setPasswordError(reply.messages);
                 }
             
             } catch (err) {
@@ -90,6 +95,12 @@ export default ({navigation}) => {
         </View>
         <ScrollView contentContainerStyle={{alignItems:"center"}}>
           <TextInput style = {styles.inputContainer}
+            placeholder = "Name"
+            placeholderTextColor="#7a7a7a"
+            onChangeText={onChangeName}
+            value = {name}
+          />
+          <TextInput style = {styles.inputContainer}
             onChangeText={onChangeEmail}
             placeholderTextColor="#7a7a7a"
             placeholder = "Email"
@@ -97,17 +108,10 @@ export default ({navigation}) => {
             keyboardType="email-address"
           />
           <TextInput style = {styles.inputContainer}
-            placeholder = "Confirm Email"
-            placeholderTextColor="#7a7a7a"
-            onChangeText={onChangeConfirmEmail}
-            value = {confirmEmail}
-            keyboardType="email-address"
-          />
-          <TextInput style = {styles.inputContainer}
-            placeholder = "Name"
-            placeholderTextColor="#7a7a7a"
-            onChangeText={onChangeName}
-            value = {name}
+            placeholder = "Address"
+            placeholderTextColor="#7a7a7a"W
+            onChangeText={onChangeAddress}
+            value = {address}
           />
           <TextInput style = {styles.inputContainer}
             placeholder = "Lease ID/Bond Number"
