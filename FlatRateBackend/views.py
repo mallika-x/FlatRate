@@ -13,6 +13,9 @@ from datetime   import datetime
 from csv        import reader, writer
 from os         import path
 
+import  matplotlib.pyplot   as      plt
+from    matplotlib.colors   import  LinearSegmentedColormap
+
 flatten = lambda ll: [] if len(ll) == 0 else ll[0] + flatten(ll[1:])
 
 # Errors
@@ -408,6 +411,34 @@ class APIGetTallies(APIView):
         out = dict(zip(uids, tallyNums))
 
         return Response(out)
+
+    def _draw_ratios(names, leaseid, completed, skipped):
+        cmapg=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256)
+        cmapb=LinearSegmentedColormap.from_list('rg',["g", "y", "r"], N=256)
+
+        fig, axs = plt.subplots(1,2)
+        a1 = axs[0].imshow(data1, cmap=cmapg,
+                    vmin=0, vmax=10, aspect='auto',
+                    interpolation='nearest')
+        a2 = axs[1].imshow(data2, cmap=cmapb,
+                    vmin=0, vmax=10, aspect='auto',
+                    interpolation='nearest')
+
+        for i in nrows:
+            axs[0].annotate(str(data1[i])[1:-1], xy=(0, i), ha='center', va='center', color='black')
+
+        for i in nrows:
+            axs[1].annotate(str(data2[i])[1:-1], xy=(0, i), ha='center', va='center', color='black')
+
+        for ax,l in zip(axs,['Completed','Skipped',]):
+            ax.set_xticks([])
+            ax.set_xlabel(l)
+        axs[0].set_yticks(list(nrows))
+        axs[0].tick_params(length = 0)
+        axs[0].set_yticklabels(names[:len(nrows)])
+        axs[1].set_yticks([])
+
+        plt.savefig(f"{leaseid}.png", transparent = True)
 
 
 class APIGetSocialCredits(APIView):
