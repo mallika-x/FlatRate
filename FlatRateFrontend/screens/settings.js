@@ -2,6 +2,7 @@ import { SafeAreaView, View } from 'react-native'
 import styles from "../styles"
 import IcoButton from '../components/IcoButton';
 import Header from '../components/Header';
+import globals from '../globals'
 
 
 export default ({navigation}) => {  
@@ -12,6 +13,7 @@ export default ({navigation}) => {
         <IcoButton text="Change password" onPress={() => {}} />
         <IcoButton text="Change Lease ID" onPress={() => {}} />
         <IcoButton text="View Rating" onPress={() => {}} />
+        <IcoButton text="Logout" onPress={() => {globals.username=''; navigation.navigate('Login')}} />
       </View>
     </SafeAreaView>
   );
