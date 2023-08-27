@@ -6,7 +6,7 @@ const BASE = "http://10.89.211.86:8000/flatrate"
 export default {
     registerPoint:      BASE + "/api-post-new-user/",
     loginPoint:         BASE + "/api-try-login/",
-    //lastCheckin:        BASE + "/fetch/api-fetch-last-checkin",
+    getFlatmates:       BASE + "/api-get-flatmates/",
     //addCheckin:         BASE + "/push/api-push-new-checkin/",
     //getInterests:       BASE + "/fetch/api-fetch-interests",
     //saveInterests:      BASE + "/push/api-set-user-interests/",
