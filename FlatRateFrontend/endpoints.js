@@ -7,7 +7,7 @@ export default {
     registerPoint:      BASE + "/api-post-new-user/",
     loginPoint:         BASE + "/api-try-login/",
     getFlatmates:       BASE + "/api-get-flatmates/",
-    //addCheckin:         BASE + "/push/api-push-new-checkin/",
+    getTallies:         BASE + "/api-get-tallies/",
     //getInterests:       BASE + "/fetch/api-fetch-interests",
     //saveInterests:      BASE + "/push/api-set-user-interests/",
     //getUserInterests:   BASE + "/fetch/api-fetch-user-interests",

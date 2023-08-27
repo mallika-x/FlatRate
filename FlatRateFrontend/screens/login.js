@@ -14,6 +14,9 @@ export default ({navigation}) => {
   const [loginError, setLoginError] = useState('');
 
   const onLogin = async () => {
+    // Set the username for app usage
+    globals.username = username
+
     if (globals.backendOn) {
       try {
         console.log("about to fetch");
