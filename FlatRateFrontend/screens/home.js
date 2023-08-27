@@ -9,6 +9,8 @@ import endpoints from '../endpoints';
 
 export default () => {
     var roommatesExist = false;
+    const [imageURL, setImageUrl] = useState('');
+
     if (globals.backendOn) {
         const [flatmateData, setData] = useState(null);
         console.log(`about to fetch flatmate data for ${globals.username}`);
@@ -23,6 +25,28 @@ export default () => {
               console.error('Error fetching data:', error);
             });
         }, []); // Empty dependency array ensures the effect runs once on mount
+
+        // Get tallies image
+        useEffect(() => {
+            fetch(`${endpoints.getTallies}?leaseid=${globals.leaseID}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Image request failed');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create an object URL from the Blob
+                console.log('Blob size:', blob.size);
+                console.log('Blob type:', blob.type);
+                const objectURL = URL.createObjectURL(blob);
+                setImageUrl(objectURL);
+            })
+            .catch(error => {
+                console.error('Error fetching image:', error);
+            });
+        }, []);
+        
         try {
             console.log(flatmateData.emails)
             if (flatmateData.emails.length > 0) {
@@ -52,8 +76,11 @@ export default () => {
                     <Header text="Welcome" />
                     <View style={{flexGrow: 1, alignSelf: "stretch", margin: 35, justifyContent: "space-between"}}>
                         <Text style={{fontSize:24, fontFamily:"Sansita", color:colors.purple}}>Roommates exist.</Text>
+                        <Image src={imageURL} alt="Fetched" />
                     </View>
                 </SafeAreaView>
             );
     }
 };
+
+//<img src={imageURL} alt="Fetched" />

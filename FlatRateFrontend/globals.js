@@ -5,4 +5,5 @@ export default {
     backendOn: true,
     forceToken : false,
     username : '',
+    leaseID : '',
 }

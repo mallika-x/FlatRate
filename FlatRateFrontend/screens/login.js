@@ -36,6 +36,7 @@ export default ({navigation}) => {
         // if (resp.token) {
         if (resp["access"] == "approved") {
           console.log("success");
+          globals.leaseID = resp["leaseid"];
           // do something with the token later
           // await setItemAsync("authToken", resp.token);
           // global.token = resp.token;

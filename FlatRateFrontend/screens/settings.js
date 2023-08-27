@@ -13,7 +13,7 @@ export default ({navigation}) => {
         <IcoButton text="Change password" onPress={() => {}} />
         <IcoButton text="Change Lease ID" onPress={() => {}} />
         <IcoButton text="View Rating" onPress={() => {}} />
-        <IcoButton text="Logout" onPress={() => {globals.username=''; navigation.navigate('Login')}} />
+        <IcoButton text="Logout" onPress={() => {globals.username=''; globals.leaseID='', navigation.navigate('Login')}} />
       </View>
     </SafeAreaView>
   );

@@ -73,27 +73,3 @@ export default function App() {
     </>
   )
 };
-
-/*
- return (
-    <>
-    <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown:false}}>
-        <Stack.Screen name="NavBar" component={MainApp} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="DetailsScreen" component={Details} />
-        <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
-        <Stack.Screen name="HomeScreen" component={Home} />
-        <Stack.Screen name="TasksScreen" component={Tasks} />
-        <Stack.Screen name="SettingsScreen" component={Settings} />
-        <Stack.Screen name="RoomiesScreen" component={Roomies} />
-        <Stack.Screen name="NotificationsScreen" component={Notifications} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    <SafeAreaView style = {{backgroundColor: colors.white, borderWidth : 3, borderTopWidth : 0, borderColor : colors.purple}}>
-    <StatusBar style="auto"/>
-    </SafeAreaView>
-    </>
-  )
-
-*/
