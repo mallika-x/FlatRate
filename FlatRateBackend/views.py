@@ -348,9 +348,10 @@ class APIGetFlatmates(APIView):
             return BAD_FIELDS
 
         lease = Flatmates.objects.filter(user = user)[0].lease
-        mates = [f.user.email for f in Flatmates.objects.filter(lease = lease) if f.user != user]
+        fmates = list(Flatmates.objects.filter(lease = lease)) # wtf?
+        mates = [f.user.email for f in fmates if f.user != user]
 
-        return Response(mates)
+        return Response({"emails": mates})
 
 class APIChangeLease(APIView):
     """
@@ -403,6 +404,9 @@ class APIGetTallies(APIView):
         except:
             return BAD_FIELDS
 
+        #mates = Flatmates.objects.f
+
+        """
         mates = Flatmates.objects.filter(lease = lease)
         fmusers = [f.user for f in mates]
         tallies = [ChoreTallies.objects.filter(user = m)[0] for m in fmusers]
@@ -411,6 +415,7 @@ class APIGetTallies(APIView):
         out = dict(zip(uids, tallyNums))
 
         return Response(out)
+        """
 
     def _draw_ratios(names, leaseid, completed, skipped):
         cmapg=LinearSegmentedColormap.from_list('rg',["r", "y", "g"], N=256)
