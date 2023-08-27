@@ -66,8 +66,10 @@ class APITryLogin(APIView):
             return BAD_FIELDS
 
         resp = None
-        if User.objects.filter(email = uname).exists():
-            resp = Response({"access": "approved"})
+        search = User.objects.filter(email = uname)
+        if search.exists():
+            leaseid = Flatmates.objects.filter(user = search[0])[0].lease.leaseID
+            resp = Response({"access": "approved", "leaseid": leaseid})
         else:
             resp = Response({"access": "denied"})
 
@@ -109,31 +111,34 @@ class APIPostNewUser(APIView):
         if (leaseid):
             search = Lease.objects.filter(leaseID = leaseid)
             if search.exists():
-                new_mate = Flatmates(lease = search[0], user = add)
+                lease = search[0]
+                new_mate = Flatmates(lease = lease, user = add)
                 new_mate.save()
             else:
                 addrSearch = Lease.objects.filter(address = address)
                 if addrSearch.exists():
-                    newMate = Flatmates(lease = addrSearch[0], user = add)
+                    lease = addrSearch[0]
+                    newMate = Flatmates(lease = lease, user = add)
                     newMate.save()
                 else:
-                    newLease = Lease(leaseID = leaseid, address = address)
-                    newLease.save()
-                    newMates = Flatmates(lease = newLease, user = add)
+                    lease = Lease(leaseID = leaseid, address = address)
+                    lease.save()
+                    newMates = Flatmates(lease = lease, user = add)
                     newMates.save()
         else:
             addrSearch = Lease.objects.filter(address = address)
             if addrSearch.exists():
-                newMate = Flatmates(lease = addrSearch[0], user = add)
+                lease = addrSearch[0]
+                newMate = Flatmates(lease = lease, user = add)
                 newMate.save()
             else:
                 leaseid = -1 * randint(1, BIG_ENOUGH)
-                newLease = Lease(leaseID = leaseid, address = address)
-                newLease.save()
-                newMates = Flatmates(lease = newLease, user = add)
+                lease = Lease(leaseID = leaseid, address = address)
+                lease.save()
+                newMates = Flatmates(lease = ease, user = add)
                 newMates.save()
 
-        return GOOD
+        return Response({"good": lease.leaseID})
 
 
 #class APIResolveAddress(APIView):
